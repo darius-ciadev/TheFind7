@@ -1,0 +1,8 @@
+:root {
+    --brand-500: #0066FF; /* replace with your colors.json primary */
+    --brand-600: #0052cc;
+
+    --bg: #ffffff;
+    --text: #111827;
+    --muted: #6b7280;
+}
