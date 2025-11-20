@@ -1,8 +1,13 @@
 :root {
-    --brand-500: #0066FF; /* replace with your colors.json primary */
-    --brand-600: #0052cc;
+    --color-primary: #212F54;
+    --color-background: #F3F0ED;
+    --color-accent: #00FFAE;
+    --color-neutral: #6F7689;
 
-    --bg: #ffffff;
-    --text: #111827;
-    --muted: #6b7280;
+    /* Additional derived tokens */
+    --color-primary-light: #334979;
+    --color-primary-dark: #18223D;
+
+    --color-neutral-light: #A3A9BB;
+    --color-neutral-dark: #4F5565;
 }

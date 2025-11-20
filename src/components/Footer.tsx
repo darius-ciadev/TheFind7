@@ -1,9 +1,7 @@
 export default function Footer() {
     return (
-        <footer className="site-footer">
-            <div className="container">
-                <small>© {new Date().getFullYear()} Find7 — All rights reserved.</small>
-            </div>
+        <footer className="w-full mt-20 py-10 border-t text-center text-sm text-neutral">
+            © 2025 <span className="font-semibold">Find7</span> — All rights reserved.
         </footer>
-    )
+    );
 }

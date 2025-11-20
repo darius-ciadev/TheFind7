@@ -1,0 +1,46 @@
+{
+  "labels": [
+    {
+      "key": "best_overall",
+      "name": "Best Overall",
+      "tagline": "The right one, full stop.",
+      "emoji": "\ud83e\udd47"
+    },
+    {
+      "key": "best_value",
+      "name": "Best Value",
+      "tagline": "Smart choice, right spend.",
+      "emoji": "\ud83d\udcb8"
+    },
+    {
+      "key": "best_premium",
+      "name": "Best Premium",
+      "tagline": "Right fit, refined.",
+      "emoji": "\ud83d\udc8e"
+    },
+    {
+      "key": "best_kids",
+      "name": "Best for Kids",
+      "tagline": "Right fit for small hands.",
+      "emoji": "\ud83d\udc66"
+    },
+    {
+      "key": "best_eco",
+      "name": "Best Eco Choice",
+      "tagline": "Right for you. Right for the planet.",
+      "emoji": "\ud83c\udf0d"
+    },
+    {
+      "key": "cool_choice",
+      "name": "Cool Kids' Choice",
+      "tagline": "The right vibe, right now.",
+      "emoji": "\ud83d\ude0e"
+    },
+    {
+      "key": "utility_pick",
+      "name": "Best Utility Pick",
+      "tagline": "Gets it done. The right tool.",
+      "emoji": "\ud83e\uddf0"
+    }
+  ]
+}

@@ -1,16 +1,13 @@
-import type { AppProps } from 'next/app'
-import '../styles/globals.css'
-import Footer from '../components/Footer'
-import Header from '../components/Header'
+import type { AppProps } from "next/app";
+import "@/styles/variables.css";
+import "@/styles/globals.css";
+import SiteLayout from "@/components/SiteLayout";
+
 
 export default function App({ Component, pageProps }: AppProps) {
-    return (
-        <>
-            <Header />
-                <main>
-                    <Component {...pageProps} />
-                </main>
-            <Footer />
-        </>
-    )
+return (
+    <SiteLayout>
+        <Component {...pageProps} />
+    </SiteLayout>
+);
 }
