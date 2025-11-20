@@ -75,7 +75,7 @@ export default function ProductDetailPage({ item, category, alternatives }: Prop
 
                         {/* Item description (long text expandable later) */}
                         <p className="text-neutral leading-relaxed">
-                            {item.description || "This product delivers excellent performance and value within its category."}
+                            {category.description || "This product delivers excellent performance and value within its category."}
                         </p>
                     </div>
                 </div>
