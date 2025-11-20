@@ -2,10 +2,15 @@ import { GetStaticPaths, GetStaticProps } from "next";
 import Image from "next/image";
 import Link from "next/link";
 
-import { items } from "@/data/items";
-import { categories } from "@/data/categories";
+import { items, Item } from "@/data/items";
+import { categories, Category } from "@/data/categories";
 
-export default function ProductDetailPage({ item, category }) {
+type Props = {
+    item: Item;
+    category: Category;
+};
+
+export default function ProductDetailPage({ item, category }: Props) {
     const categorySlug = category.slug;
     const imageSrc = item.image || "/placeholder.png";
 
@@ -81,7 +86,7 @@ export default function ProductDetailPage({ item, category }) {
             <section className="mt-16">
                 <h2 className="text-2xl font-bold mb-4">Why we picked it</h2>
                 <p className="text-neutral text-lg leading-relaxed">
-                    {item.description ||
+                    {item.subtitle ||
                         "This product earned its place on the list due to performance, value, and user trust."}
                 </p>
             </section>
@@ -90,7 +95,7 @@ export default function ProductDetailPage({ item, category }) {
 }
 
 /* -------------------------------
-   STATIC PATHS
+STATIC PATHS
 -------------------------------- */
 export const getStaticPaths: GetStaticPaths = async () => {
     const paths = items.map((item) => ({
@@ -104,11 +109,11 @@ export const getStaticPaths: GetStaticPaths = async () => {
 };
 
 /* -------------------------------
-   STATIC PROPS
+STATIC PROPS
 -------------------------------- */
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-    const categoryParam = params.category as string;
-    const slugParam = params.slug as string;
+    const categoryParam = params?.category as string;
+    const slugParam = params?.slug as string;
 
     const realCategoryKey = categoryParam.replace(/-/g, "_");
 
