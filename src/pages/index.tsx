@@ -44,11 +44,11 @@ export default function HomePage() {
                             className="card p-6 block hover:shadow-md"
                         >
                             <div className="category-row mb-2">
-                            <span style={{ fontSize: "1.6rem" }}>{cat.icon}</span>
+                            <span style={{ fontSize: "1.6rem" }}>{cat.emoji}</span>
                             <h3 className="text-xl font-semibold ml-2">{cat.name}</h3>
                             </div>
 
-                            <p className="text-gray-600 text-sm">{cat.description}</p>
+                            <p className="text-gray-600 text-sm">{cat.tagline}</p>
                         </Link>
                         ))}
                     </div>
@@ -68,7 +68,7 @@ export default function HomePage() {
                     className="card p-5"
                 >
                     <h3 className="font-semibold mb-1">{cat.name}</h3>
-                    <p className="text-gray-600 text-sm">{cat.description}</p>
+                    <p className="text-gray-600 text-sm">{cat.tagline}</p>
                 </Link>
                 ))}
             </div>

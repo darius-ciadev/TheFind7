@@ -8,10 +8,10 @@ export interface Category {
     slug: string;
 }
 
-export const categories: Category[] = schema.labels.map((c:any) => ({
+export const categories: Category[] = schema.labels.map((c: any) => ({
     key: c.key,
     name: c.name,
-    description: c.tagline,
+    tagline: c.tagline,
+    emoji: c.emoji || c.icon || "",
     slug: (c.key || "").replace(/_/g, "-"),
-    icon: c.emoji || c.icon || ""
 }));
