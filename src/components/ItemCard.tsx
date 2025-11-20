@@ -52,7 +52,7 @@ export default function ItemCard({
 
                 <h3 className="text-lg font-semibold mb-1">{title}</h3>
 
-                <p classname="text-sm text-neutral mb-3">{subtitle}</p>
+                <p className="text-sm text-neutral mb-3">{subtitle}</p>
 
                 <div className="flex justify-between text-sm mb-4">
                     <span className="flex items-center gap-1">
