@@ -54,7 +54,7 @@ export default function SiteLayout({ children }: Props) {
         </div>
       </header>
 
-      <main className="flex-1 pt-8 pb-16">{children}</main>
+      <main className="flex-1 pb-16">{children}</main>
 
       <footer className="border-t mt-12 py-8 text-center text-sm text-neutral">
         <div className="max-w-6xl mx-auto px-6">
