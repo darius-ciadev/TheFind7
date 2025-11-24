@@ -5,11 +5,11 @@ import Autoplay from "embla-carousel-autoplay";
 import { useEffect, useState, useCallback } from "react";
 import ItemCard from "@/components/ItemCard";
 
-interface TopPicksCarouselProps {
-  items: string;
+interface TopPicksCarouselProps<T> {
+  items: T[];
 }
 
-export default function TopPicksCarousel({ items }: TopPicksCarouselProps) {
+export default function TopPicksCarousel<T>({ items }: TopPicksCarouselProps<T>) {
   const [emblaRef, embla] = useEmblaCarousel(
     {
       align: "start",
@@ -27,7 +27,7 @@ export default function TopPicksCarousel({ items }: TopPicksCarouselProps) {
   );
 
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const [scrollSnaps, setScrollSnaps] = useState([]);
+  const [scrollSnaps, setScrollSnaps] = useState<number[]>([]);
 
   const onSelect = useCallback(() => {
     if (!embla) return;
@@ -56,7 +56,7 @@ export default function TopPicksCarousel({ items }: TopPicksCarouselProps) {
       {/* Embla Viewport */}
       <div ref={emblaRef} className="overflow-hidden">
         <div className="flex gap-6 py-4 px-1">
-          {items.map((item, index) => (
+          {items.map((item: any, index: number) => (
             <div
               key={item.slug}
               className="

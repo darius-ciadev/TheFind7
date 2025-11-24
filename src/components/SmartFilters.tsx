@@ -9,24 +9,15 @@ import {
   SelectContent,
   SelectItem,
 } from "@/components/ui/select";
+import type { Item } from "@/data/items";
 
 /**
  * SmartFilters — Compact Apple/Stripe Minimal Version
  */
 
-type ItemRaw = {
-  slug: string;
-  category: string;
-  title: string;
-  subtitle?: string;
-  image?: string;
-  price: string;
-  rating: number;
-};
-
 type Props = {
-  items: ItemRaw[];
-  onChange?: (filtered: ItemRaw[]) => void;
+  items: Item[];
+  onChange?: (filtered: Item[]) => void;
   categories?: string[];
 };
 
@@ -54,7 +45,7 @@ function parsePrice(price: unknown) {
 export default function SmartFilters({ items, onChange, categories }: Props) {
   // Store original items by slug
   const slugToOriginal = useMemo(() => {
-    const m = new Map<string, ItemRaw>();
+    const m = new Map<string, Item>();
     items.forEach((it) => m.set(it.slug, it));
     return m;
   }, [items]);
@@ -158,7 +149,7 @@ export default function SmartFilters({ items, onChange, categories }: Props) {
   useEffect(() => {
     const mapped = filtered
       .map((f) => slugToOriginal.get(f.slug))
-      .filter(Boolean) as ItemRaw[];
+      .filter(Boolean) as Item[];
 
     const t = setTimeout(() => onChange?.(mapped), 80);
     return () => clearTimeout(t);
