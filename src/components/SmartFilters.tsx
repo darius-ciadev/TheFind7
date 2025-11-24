@@ -145,15 +145,18 @@ export default function SmartFilters({ items, onChange, categories }: Props) {
     return copy;
   }, [normalized, selectedCategory, selectedRating, priceRange, deferredSearch, sortBy, humanToIds]);
 
-  // Emit results
+
+  // Emit results ONLY when size or slugs meaningfully change
   useEffect(() => {
     const mapped = filtered
       .map((f) => slugToOriginal.get(f.slug))
       .filter(Boolean) as Item[];
 
-    const t = setTimeout(() => onChange?.(mapped), 80);
-    return () => clearTimeout(t);
-  }, [filtered, onChange, slugToOriginal]);
+    const mappedSlugs = mapped.map((m) => m.slug).join(",");
+
+    onChange?.(mapped);
+  }, [filtered.length, filtered.map((f) => f.slug).join(","), slugToOriginal]);
+
 
   const reset = useCallback(() => {
     setSelectedCategory("All");

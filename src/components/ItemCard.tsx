@@ -22,11 +22,20 @@ export default function ItemCard({
   slug,
   category,
 }: ItemCardProps) {
-  /** Smart fallback */
-  const imageSrc =
-    image && image.trim() !== "" && !image.startsWith("/products/")
-      ? image
-      : "/placeholder.png";
+  /** SSR-safe image fallback */
+  const imageSrc = (() => {
+    // No image provided at all
+    if (!image || image.trim() === "") return "/placeholder.png";
+
+    // DEV MODE — always fallback until real images exist
+    if (process.env.NODE_ENV === "development") {
+      return "/placeholder.png";
+    }
+
+    // Production: allow real image paths
+    return image;
+  })();
+
 
   /** URL: best_value → /best-value/slug */
   const href = `/${category.replace(/_/g, "-")}/${slug}`;
@@ -49,22 +58,22 @@ export default function ItemCard({
           hover:-translate-y-0.5
         "
       >
-        {/* Rank badge */}
+       {/* Rank badge — refined */}
         <div
           className="
-            absolute -top-2 -left-2 
-            w-8 h-8 
-            rounded-full 
-            bg-[var(--green)] 
-            text-white 
+            absolute -top-3 -left-3
+            w-[36px] h-[36px]
             flex items-center justify-center
-            text-sm font-semibold
-            shadow-sm
+            rounded-full
+            bg-gradient-to-br from-green-400 to-green-600
+            text-white text-sm font-bold
+            ring-2 ring-white shadow-lg
             z-20
           "
         >
           {rank}
         </div>
+
 
         {/* Image */}
         <div className="relative w-full aspect-[16/10] rounded-lg overflow-hidden bg-neutral-100 mb-3">

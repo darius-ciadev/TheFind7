@@ -1,19 +1,19 @@
 "use client";
 
-import { useState, useMemo, useDeferredValue } from "react";
+import { useMemo } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
+
 import Seo from "@/components/Seo";
-import SmartFilters from "@/components/SmartFilters";
-import ItemCard from "@/components/ItemCard";
-import CategoryCard from "@/components/CategoryCard";
-import ValueProps from "@/components/ValueProps";
 import Hero from "@/components/Hero";
+import ValueProps from "@/components/ValueProps";
+import CategoryCard from "@/components/CategoryCard";
+import ItemCard from "@/components/ItemCard";
 import { categories } from "@/data/categories";
-import { items, Item } from "@/data/items";
+import { items } from "@/data/items";
 import { useReveal } from "@/hooks/useReveal";
 
-/* Lazy components */
+/* Lazy-loaded carousel */
 const TopPicksCarousel = dynamic(
   () => import("@/components/TopPicksCarousel"),
   {
@@ -25,14 +25,12 @@ const TopPicksCarousel = dynamic(
 );
 
 export default function HomePage() {
-  const [filteredItems, setFilteredItems] = useState<Item[]>(items);
-  const deferredItems = useDeferredValue(filteredItems);
   const { ref, visible } = useReveal();
 
   /* Trending fallback logic */
   const trending = useMemo(() => {
     const seen = new Set<string>();
-    const picks: Item[] = [];
+    const picks: typeof items = [];
 
     for (const it of items) {
       if (!seen.has(it.category)) {
@@ -52,40 +50,28 @@ export default function HomePage() {
         description="We search, compare, and curate thousands of lists so you don’t have to. Seven ways to the right fit — every time."
       />
 
-      {/* HERO (brand-correct) */}
+      {/* -------------------------------------------------- */}
+      {/* HERO */}
+      {/* -------------------------------------------------- */}
       <Hero />
 
-      {/* VALUE PROPS — Option A (tight, centered, polished) */}
-      <ValueProps />
+      {/* -------------------------------------------------- */}
+      {/* VALUE PROPS */}
+      {/* -------------------------------------------------- */}
+      <div className="py-16 bg-white">
+        <ValueProps />
+      </div>
 
-      {/* SMART FILTERS */}
-      <section className="w-full">
-        <div className="max-w-7xl mx-auto px-6 py-12">
-          <SmartFilters
-            items={items}
-            categories={[
-              "All",
-              "Best Overall",
-              "Best Value",
-              "Best Premium",
-              "Best for Kids",
-              "Eco Choice",
-              "Cool Kids’ Choice",
-              "Utility Pick",
-            ]}
-            onChange={setFilteredItems}
-          />
-        </div>
-      </section>
-
+      {/* -------------------------------------------------- */}
       {/* CATEGORY GRID */}
-      <section className="w-full bg-white">
-        <div className="max-w-7xl mx-auto px-6 py-16">
-          <div className="text-center mb-10">
+      {/* -------------------------------------------------- */}
+      <section className="bg-white py-20">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="text-center mb-14">
             <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight">
               Browse Categories
             </h2>
-            <p className="text-neutral mt-2 max-w-xl mx-auto">
+            <p className="text-neutral mt-3 max-w-xl mx-auto">
               Seven ways to the right choice — curated for every kind of shopper.
             </p>
           </div>
@@ -104,41 +90,43 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* TOP PICKS */}
-      <section className="w-full">
-        <div className="max-w-7xl mx-auto px-6 py-16">
-          <div className="flex items-center justify-between mb-6">
+      {/* -------------------------------------------------- */}
+      {/* TOP PICKS (Carousel) */}
+      {/* -------------------------------------------------- */}
+      <section className="py-20 bg-neutral-50">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="flex items-center justify-between mb-8">
             <h2 className="text-2xl md:text-3xl font-bold">
               Top Picks of the Week
             </h2>
-            <Link href="/categories" className="text-sm text-neutral hover:underline">
+
+            <Link
+              href="/categories"
+              className="text-sm text-neutral hover:underline"
+            >
               View all categories →
             </Link>
           </div>
 
-          <TopPicksCarousel
-            items={
-              filteredItems.length > 0
-                ? deferredItems.slice(0, 12)
-                : trending
-            }
-          />
+          <TopPicksCarousel items={trending} />
         </div>
       </section>
 
+      {/* -------------------------------------------------- */}
       {/* FEATURED RESULTS */}
-      <section className="w-full bg-white">
-        <div className="max-w-7xl mx-auto px-6 py-16">
-          <div className="flex items-center justify-between mb-6">
+      {/* -------------------------------------------------- */}
+      <section className="bg-white py-20">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="flex items-center justify-between mb-8">
             <h3 className="text-xl font-semibold">Featured results</h3>
+
             <span className="text-sm text-neutral">
-              Showing {deferredItems.length} result
-              {deferredItems.length !== 1 ? "s" : ""}
+              Showing {trending.length} recommendations
             </span>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {deferredItems.slice(0, 6).map((it, idx) => (
+            {trending.map((it, idx) => (
               <ItemCard
                 key={it.slug}
                 rank={idx + 1}
@@ -155,19 +143,22 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* -------------------------------------------------- */}
       {/* CTA — ANIMATED */}
-      <section className="w-full">
-        <div className="max-w-7xl mx-auto px-6 py-24">
+      {/* -------------------------------------------------- */}
+      <section className="py-28 bg-neutral-50">
+        <div className="max-w-7xl mx-auto px-6">
           <div
             ref={ref}
             className={`
               relative overflow-hidden rounded-2xl p-10 bg-white border shadow-sm
               flex flex-col md:flex-row md:items-center md:justify-between
-              gap-10 md:gap-14
+              gap-12 md:gap-16
               transition-all duration-[900ms] ease-out
               ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}
             `}
           >
+            {/* Background glow */}
             <div
               className={`
                 absolute inset-0 opacity-0 
@@ -177,6 +168,7 @@ export default function HomePage() {
               `}
             />
 
+            {/* Text */}
             <div
               className={`
                 relative z-[5] max-w-xl space-y-3
@@ -199,6 +191,7 @@ export default function HomePage() {
               </div>
             </div>
 
+            {/* CTA Button */}
             <Link
               href="/signup"
               className={`
