@@ -34,10 +34,6 @@ a {
   font-weight: 500;
 }
 
-/* a:hover {
-  text-decoration: underline;
-} */
-
 /* CUSTOM UTILITY CLASSES */
 .section {
   @apply py-12 px-4;
@@ -89,4 +85,27 @@ a {
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* Sticky left column */
+.compare-table-sticky {
+  position: sticky;
+  left: 0;
+  background: white;
+  z-index: 20; /* keeps it above the other cells */
+  border-right: 1px solid #eee;
+}
+
+/* Ensures product columns scroll horizontally */
+.compare-scroll-container {
+  overflow-x: auto;
+  overflow-y: visible;
+  position: relative;
+  padding-bottom: 1rem;
+}
+
+/* Prevent shaking on scroll */
+.compare-table {
+  border-collapse: separate;
+  border-spacing: 0;
 }

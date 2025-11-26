@@ -1,3 +1,4 @@
+import { devPlaceholder } from "@/utils/devPlaceholder";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -22,43 +23,29 @@ export default function ItemCard({
   slug,
   category,
 }: ItemCardProps) {
-  /** SSR-safe image fallback */
-  const imageSrc = (() => {
-    // No image provided at all
-    if (!image || image.trim() === "") return "/placeholder.png";
-
-    // DEV MODE — always fallback until real images exist
-    if (process.env.NODE_ENV === "development") {
-      return "/placeholder.png";
-    }
-
-    // Production: allow real image paths
-    return image;
-  })();
-
-
-  /** URL: best_value → /best-value/slug */
+  /** ROUTE */
   const href = `/${category.replace(/_/g, "-")}/${slug}`;
+
+  /** BADGE (Best Overall / Best Value / Premium) */
+  const badgeMap: Record<number, string> = {
+    1: "Best Overall",
+    2: "Best Value",
+    3: "Premium",
+  };
+
+  const badge = badgeMap[rank];
 
   return (
     <Link href={href} className="block group">
       <article
         className="
-          relative
-          bg-white
-          rounded-xl
-          border
-          p-4
-          shadow-sm
-          flex
-          flex-col
-          transition-all
-          duration-200
-          hover:shadow-md
-          hover:-translate-y-0.5
+          relative bg-white rounded-xl border p-4 shadow-sm
+          flex flex-col transition-all duration-200
+          hover:shadow-md hover:-translate-y-0.5
         "
       >
-       {/* Rank badge — refined */}
+
+        {/* Rank badge */}
         <div
           className="
             absolute -top-3 -left-3
@@ -74,18 +61,40 @@ export default function ItemCard({
           {rank}
         </div>
 
+        {/* BEST Overall / BEST Value / Premium Badge */}
+        {badge && (
+          <div
+            className="
+              absolute top-3 right-3
+              px-2 py-1
+              rounded-md shadow-md
+              text-[10px] font-semibold tracking-wide uppercase
+              bg-black/80 backdrop-blur-sm text-white
+              border border-white/10
+              z-20
+            "
+          >
+            {badge}
+          </div>
+        )}
 
         {/* Image */}
         <div className="relative w-full aspect-[16/10] rounded-lg overflow-hidden bg-neutral-100 mb-3">
           <Image
-            src={imageSrc}
+            src={devPlaceholder(image)}
             alt={title}
             fill
             priority={rank <= 3}
-            sizes="(max-width: 640px) 100vw,
-                   (max-width: 1024px) 50vw,
-                   33vw"
-            className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+            sizes="
+              (max-width: 640px) 100vw,
+              (max-width: 1024px) 50vw,
+              33vw
+            "
+            className="
+              object-cover 
+              transition-transform duration-300 
+              group-hover:scale-[1.03]
+            "
           />
         </div>
 
@@ -108,26 +117,19 @@ export default function ItemCard({
           <span className="font-medium text-[14px]">{price}</span>
         </div>
 
-        {/* CTA — CTA-PROTECTED */}
+        {/* CTA */}
         <div className="itemcard-cta-wrapper mt-1">
-            <div
-                className="
-                    w-full 
-                    py-2 
-                    rounded-md 
-                    text-center 
-                    text-sm 
-                    font-medium
-                    bg-[var(--green)] 
-                    text-white 
-                    transition 
-                    duration-200 
-                    group-hover:bg-[var(--green-dark)]
-                    group-hover:shadow-sm
-                "
-                >
-                View Item →
-            </div>
+          <div
+            className="
+              w-full py-2 rounded-md text-center text-sm font-medium
+              bg-[var(--green)] text-white
+              transition duration-200
+              group-hover:bg-[var(--green-dark)]
+              group-hover:shadow-sm
+            "
+          >
+            View Item →
+          </div>
         </div>
       </article>
     </Link>

@@ -1,12 +1,13 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { GetStaticPaths, GetStaticProps } from "next";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 
-import { categories } from "@/data/categories";
-import { items, Item } from "@/data/items";
+import Seo from "@/components/Seo";
 import SmartFilters from "@/components/SmartFilters";
 import ItemCard from "@/components/ItemCard";
+import { categories } from "@/data/categories";
+import { items, Item } from "@/data/items";
 
 type Props = {
   category: {
@@ -14,12 +15,12 @@ type Props = {
     name: string;
     slug: string;
     emoji: string;
-    description: string;
+    description?: string;
   };
   categoryItems: Item[];
 };
 
-// Small helper: build JSON-LD ItemList for SEO
+/* JSON-LD builder */
 function buildItemListJsonLd(categoryUrl: string, items: Item[]) {
   const itemListElements = items.map((it, i) => ({
     "@type": "ListItem",
@@ -37,7 +38,7 @@ function buildItemListJsonLd(categoryUrl: string, items: Item[]) {
   };
 }
 
-// Skeleton card for loading state
+/* Skeleton */
 function SkeletonCard() {
   return (
     <div className="rounded-lg border bg-white p-4 animate-pulse">
@@ -48,194 +49,253 @@ function SkeletonCard() {
   );
 }
 
+/* Empty State */
+function EmptyState({ onReset }: { onReset: () => void }) {
+  return (
+    <div className="w-full rounded-xl border bg-white p-8 text-center">
+      <h3 className="text-xl font-semibold mb-2">No results found</h3>
+      <p className="text-sm text-neutral-600 mb-4">
+        Try removing filters or reset to see all curated picks.
+      </p>
+      <button
+        onClick={onReset}
+        className="inline-block px-4 py-2 rounded-md bg-[var(--green)] text-white font-medium"
+      >
+        Reset filters
+      </button>
+    </div>
+  );
+}
+
 export default function CategoryPage({ category, categoryItems }: Props) {
-  // filteredItems will be driven exclusively by SmartFilters
-  const [filteredItems, setFilteredItems] = useState<Item[]>(categoryItems);
-  const resultsRef = useRef<HTMLElement | null>(null);
   const filtersRef = useRef<HTMLDivElement | null>(null);
+  const resultsRef = useRef<HTMLElement | null>(null);
+
+  // sorting persistence
+  const [sortBy, setSortBy] = useState<string>("rating-desc");
+
+  // filtered array
+  const [filteredItems, setFilteredItems] = useState<Item[]>(categoryItems);
+
+  // transition micro-state
   const [isFiltering, setIsFiltering] = useState(false);
 
-  // When SmartFilters emits, we briefly show a lightweight transition state
-   useEffect(() => {
-    // Only show skeleton when SmartFilters emits new results
+  // skeleton during transitions
+  useEffect(() => {
     setIsFiltering(true);
-
-    const t = setTimeout(() => {
-        setIsFiltering(false);
-    }, 250);
-
+    const t = setTimeout(() => setIsFiltering(false), 200);
     return () => clearTimeout(t);
-   }, [filteredItems.length]);
+  }, [filteredItems.length]);
 
-
-  // Auto-scroll to results after filtering (only when results exist)
+  // smooth scroll after filters
   useEffect(() => {
     if (!resultsRef.current || !filtersRef.current) return;
+    requestAnimationFrame(() => {
+      const rect = filtersRef.current!.getBoundingClientRect();
+      window.scrollTo({
+        top: window.scrollY + rect.bottom + 24,
+        behavior: "smooth",
+      });
+    });
+  }, [filteredItems.length]);
 
-    // compute position just below the filters container
-    const filterRect = filtersRef.current.getBoundingClientRect();
-    const scrollTop = window.scrollY + filterRect.bottom + 12; // 12px padding
+  // FILTER → update list
+  const handleFiltersChange = useCallback((next: Item[]) => {
+    setFilteredItems(next);
+  }, []);
 
-    window.scrollTo({ top: scrollTop, behavior: "smooth" });
-  }, [filteredItems]);
+  /* SORT LOGIC */
+  const sortedItems = useMemo(() => {
+    let arr = [...filteredItems];
 
-  // Build JSON-LD for SEO
-  const categoryUrl = typeof window !== "undefined" ? window.location.href : `https://example.com/${category.slug}`;
-  const jsonLd = buildItemListJsonLd(categoryUrl, filteredItems.slice(0, 50));
+    switch (sortBy) {
+      case "rating-desc":
+        arr.sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0));
+        break;
+      case "rating-asc":
+        arr.sort((a, b) => (a.rating ?? 0) - (b.rating ?? 0));
+        break;
+      case "price-asc":
+        arr.sort((a, b) => (Number(a.price) || 0) - (Number(b.price) || 0));
+        break;
+      case "price-desc":
+        arr.sort((a, b) => (Number(b.price) || 0) - (Number(a.price) || 0));
+        break;
+      default:
+        break;
+    }
+
+    return arr;
+  }, [filteredItems, sortBy]);
+
+  const totalResults = sortedItems.length;
+
+  const categoryUrl =
+    typeof window !== "undefined"
+      ? window.location.href
+      : `https://example.com/${category.slug}`;
+
+  const jsonLd = buildItemListJsonLd(categoryUrl, sortedItems.slice(0, 50));
+
+  const highlights = [
+    { label: "Best Overall", hint: "Top balanced picks" },
+    { label: "Best Value", hint: "Great performance per $" },
+    { label: "Premium", hint: "High-end options" },
+  ];
 
   return (
-    <div className="container py-12">
-      {/* JSON-LD injected for crawlers */}
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+    <>
+      <Seo
+        title={`${category.name} — The Find 7`}
+        description={category.description || `Curated picks for ${category.name}`}
+      />
 
-      {/* Breadcrumbs */}
-      <nav className="text-sm text-neutral mb-6">
-        <Link href="/" className="hover:underline">Home</Link>
-        {" / "}
-        <span className="text-black">{category.name}</span>
-      </nav>
+      <div className="container py-10">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
 
-      {/* Category Header */}
-      <header className="mb-6">
-        <h1 className="text-4xl font-extrabold flex items-center gap-3 mb-3">
-          <span className="text-4xl">{category.emoji}</span>
-          {category.name}
-        </h1>
-        <p className="text-neutral text-lg max-w-2xl">{category.description}</p>
-      </header>
+        {/* Breadcrumbs */}
+        <nav className="text-sm text-neutral mb-6">
+          <Link href="/" className="hover:underline">
+            Home
+          </Link>{" "}
+          / <span className="text-black">{category.name}</span>
+        </nav>
 
-      {/* Sticky filter + quick-actions area */}
-      <div ref={filtersRef} className="mb-6">
-        <div className="relative">
-          <div className="sticky top-20 z-40">{/* top offset matches header/nav heights */}
-            <div className="mx-0 md:mx-0">
-              <SmartFilters
-                items={categoryItems}
-                onChange={(next: Item[]) => setFilteredItems(next)}
-              />
+        {/* Header */}
+        <header className="mb-6">
+          <h1 className="text-4xl font-extrabold flex items-center gap-3 mb-2">
+            <span className="text-4xl">{category.emoji}</span>
+            <span>{category.name}</span>
+          </h1>
+          {category.description && (
+            <p className="text-neutral-600 max-w-3xl">{category.description}</p>
+          )}
+        </header>
 
-              {/* Quick filters row (Editors picks, Trending, New) */}
-              <div className="mt-3 flex flex-wrap gap-3">
-                <QuickFilterButton label="Editor’s picks" onClick={() => {
-                  // quick client-side filter: example = top 3 by rank
-                  setFilteredItems(categoryItems.slice(0, 3));
-                }} />
+        {/* Filters */}
+        <div ref={filtersRef} className="mb-6">
+          <div className="sticky top-20 z-30">
+            <div className="max-w-7xl mx-auto px-6 space-y-4">
+              <SmartFilters items={categoryItems} onChange={handleFiltersChange} />
 
-                <QuickFilterButton label="Trending" onClick={() => {
-                  // trending = top rated sorted
-                  const copy = [...categoryItems].sort((a,b)=> b.rating - a.rating);
-                  setFilteredItems(copy.slice(0, 7));
-                }} />
+              {/* Highlights + sort */}
+              <div className="flex flex-wrap items-center gap-3">
+                {highlights.map((h) => (
+                  <div
+                    key={h.label}
+                    className="px-3 py-2 rounded-md bg-neutral-50 text-sm text-neutral-800"
+                  >
+                    <div className="font-medium">{h.label}</div>
+                    <div className="text-xs text-neutral-500">{h.hint}</div>
+                  </div>
+                ))}
 
-                <QuickFilterButton label="New arrivals" onClick={() => {
-                  // assume later slugs or sort by price high as a proxy for new (example)
-                  const copy = [...categoryItems].sort((a,b)=> parseFloat(b.slug.split("-")[1]) - parseFloat(a.slug.split("-")[1]));
-                  setFilteredItems(copy);
-                }} />
-
-                <QuickFilterButton label="Reset" variant="muted" onClick={() => setFilteredItems(categoryItems)} />
-
-                <div className="ml-auto text-sm text-neutral-600 self-center">Showing <strong>{filteredItems.length}</strong> result{filteredItems.length !== 1 ? "s" : ""}</div>
+                {/* Sort control */}
+                <select
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value)}
+                  className="ml-auto border px-3 py-2 rounded-md text-sm"
+                >
+                  <option value="rating-desc">Rating: High → Low</option>
+                  <option value="rating-asc">Rating: Low → High</option>
+                  <option value="price-asc">Price: Low → High</option>
+                  <option value="price-desc">Price: High → Low</option>
+                </select>
               </div>
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Results summary (compact) */}
-      <ResultsSummary total={filteredItems.length} />
-
-      {/* Animated Grid */}
-      <section ref={resultsRef as any} className="mt-6">
-        {isFiltering ? (
-          // show skeleton grid while the filtering micro-animation plays
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {Array.from({ length: 6 }).map((_, i) => (
-              <SkeletonCard key={i} />
-            ))}
+        {/* Summary */}
+        <div className="max-w-7xl mx-auto px-6 mb-4">
+          <div className="flex items-center justify-between">
+            <div className="text-sm text-neutral-700">
+              Curated picks — updated regularly
+            </div>
+            <div className="text-sm text-neutral-600">
+              {totalResults} result{totalResults !== 1 ? "s" : ""}
+            </div>
           </div>
-        ) : (
-          <AnimatePresence mode="popLayout">
-            <motion.div
-              layout
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
-            >
-              {filteredItems.map((item, i) => (
-                <motion.article
-                  layout
-                  key={item.slug}
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -8 }}
-                >
-                  <div className="relative">
-                    <Link href={`/${category.slug}/${item.slug}`}>
-                        <ItemCard
-                            rank={i + 1}
-                            title={item.title}
-                            subtitle={item.subtitle}
-                            image={item.image}
-                            price={item.price}
-                            rating={item.rating}
-                            slug={item.slug}
-                            category={category.key}
-                        />
-                    </Link>
-                  </div>
-                </motion.article>
+        </div>
+
+        {/* GRID FIX HERE */}
+        <section ref={resultsRef as any} className="max-w-7xl mx-auto px-6">
+          {isFiltering ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {Array.from({ length: sortedItems.length }).map((_, i) => (
+                <SkeletonCard key={i} />
               ))}
-            </motion.div>
-          </AnimatePresence>
-        )}
-      </section>
+            </div>
+          ) : totalResults === 0 ? (
+            <div className="max-w-2xl mx-auto">
+              <EmptyState onReset={() => setFilteredItems(categoryItems)} />
+            </div>
+          ) : (
+            <AnimatePresence mode="popLayout">
+              <motion.div
+                layout
+                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-auto"
+              >
+                {sortedItems.map((item, i) => (
+                  <motion.article
+                    key={item.slug}
+                    layout
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -8 }}
+                  >
+                    <ItemCard
+                      rank={i + 1}
+                      title={item.title}
+                      subtitle={item.subtitle}
+                      image={item.image}
+                      price={item.price}
+                      rating={item.rating}
+                      slug={item.slug}
+                      category={category.key}
+                    />
+                  </motion.article>
+                ))}
+              </motion.div>
+            </AnimatePresence>
+          )}
+        </section>
 
-      {/* CTA / Newsletter block (matching your design) */}
-      <div className="mt-12 p-6 rounded-xl bg-gradient-to-r from-green-50 to-white border">
-        <div className="flex items-center justify-between gap-6">
-          <div>
-            <h3 className="text-2xl font-bold">Want curated picks delivered?</h3>
-            <p className="text-neutral-700">Get expert-picked shortlists and weekly recommendations — no spam, just value.</p>
+        {/* CTA */}
+        <div className="mt-12 max-w-7xl mx-auto px-6">
+          <div className="rounded-xl bg-white p-8 border">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+              <div>
+                <h3 className="text-2xl font-bold">Want curated picks delivered?</h3>
+                <p className="text-neutral-600">
+                  Get weekly shortlists — no spam.
+                </p>
+              </div>
+              <Link href="/signup" className="inline-block">
+                <div className="inline-block bg-[var(--green)] text-white px-6 py-3 rounded-lg shadow">
+                  Get shortlists →
+                </div>
+              </Link>
+            </div>
           </div>
-          <Link href="/signup">
-            <div className="inline-block bg-[var(--green)] text-white px-6 py-3 rounded-lg shadow">Get shortlists →</div>
-          </Link>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 
-// ---------------------------
-// Small inline subcomponents
-// ---------------------------
-function QuickFilterButton({ label, onClick, variant = "solid" }: { label: string; onClick: () => void; variant?: "solid" | "muted" }) {
-  return (
-    <button
-      onClick={onClick}
-      className={`px-3 py-1 rounded-full text-sm font-medium transition ${variant === "solid" ? "bg-[var(--green)] text-white" : "bg-neutral-100 text-neutral-800"}`}
-    >
-      {label}
-    </button>
-  );
-}
-
-function ResultsSummary({ total }: { total: number }) {
-  return (
-    <div className="mt-4 mb-3 flex items-center justify-between">
-      <div className="text-sm text-neutral-700">Showing <strong>{total}</strong> result{total !== 1 ? "s" : ""}</div>
-      <div className="text-sm text-neutral-600">Best picks curated for you</div>
-    </div>
-  );
-}
-
-/* ----------------------------------------------------
-   STATIC PATHS & PROPS
----------------------------------------------------- */
+/* static paths */
 export const getStaticPaths: GetStaticPaths = async () => {
-  const paths = categories.map((c) => ({ params: { category: c.key.replace(/_/g, "-") } }));
+  const paths = categories.map((c) => ({
+    params: { category: c.key.replace(/_/g, "-") },
+  }));
   return { paths, fallback: false };
 };
 
+/* static props */
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const categoryParam = params?.category as string;
   const realCategoryKey = categoryParam.replace(/-/g, "_");
