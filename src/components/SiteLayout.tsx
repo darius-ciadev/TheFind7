@@ -1,12 +1,12 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, ReactNode  } from "react";
 import Link from "next/link";
 import Image from "next/image";
 
 const logoUrl = "/brand/the_find_7_logo.svg";
 
 interface SiteLayoutProps {
-    children: string
+    children: ReactNode
 }
 
 export default function SiteLayout({ children }: SiteLayoutProps) {
