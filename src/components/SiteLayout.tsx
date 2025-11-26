@@ -5,7 +5,11 @@ import Image from "next/image";
 
 const logoUrl = "/brand/the_find_7_logo.svg";
 
-export default function SiteLayout({ children }) {
+interface SiteLayoutProps {
+    children: string
+}
+
+export default function SiteLayout({ children }: SiteLayoutProps) {
   const [open, setOpen] = useState(false);
 
   return (
