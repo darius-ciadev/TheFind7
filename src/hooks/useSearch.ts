@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { searchItems } from "@/utils/searchEngine";
+import { Item } from "@/utils/searchEngine";
 
 export function useSearch(query: string) {
-  const [results, setResults] = useState([]);
+  const [results, setResults] = useState<Item[]>([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
