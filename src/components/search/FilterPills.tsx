@@ -59,10 +59,13 @@ export default function FilterPills({
   );
 }
 
-// 🔥 Animation preset
 const pillAnim = {
   initial: { opacity: 0, y: 6 },
   animate: { opacity: 1, y: 0 },
   exit: { opacity: 0, y: 6, scale: 0.9 },
-  transition: { type: "spring", stiffness: 220, damping: 20 }
+  transition: {
+    type: "spring",
+    stiffness: 220,
+    damping: 20,
+  } as const,
 };
