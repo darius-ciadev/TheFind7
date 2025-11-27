@@ -449,7 +449,7 @@ export default function CategoryPage({ category, categoryItems }: Props) {
                         viewMode="grid"
                         rank={i + 1}
                         title={item.title}
-                        subtitle={item.subtitle}
+                        subtitle={item.subtitle ?? ''}
                         image={item.image}
                         price={item.price}
                         rating={item.rating}
@@ -474,7 +474,7 @@ export default function CategoryPage({ category, categoryItems }: Props) {
                         viewMode="list"
                         rank={i + 1}
                         title={item.title}
-                        subtitle={item.subtitle}
+                        subtitle={item.subtitle ?? ''}
                         image={item.image}
                         price={item.price}
                         rating={item.rating}

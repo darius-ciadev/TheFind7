@@ -59,7 +59,7 @@ export default function ProductPage({ item, category, related }: Props) {
 
   return (
     <>
-      <Seo title={`${item.title} — ${category.name} — The Find 7`} description={item.subtitle} />
+      <Seo title={`${item.title} — ${category.name} — The Find 7`} description={item.subtitle ?? ''} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
       {/* Main Container */}
@@ -81,7 +81,7 @@ export default function ProductPage({ item, category, related }: Props) {
           <div className="lg:col-span-7 space-y-10">
 
             {/* PRODUCT GALLERY */}
-            <ProductGallery images={[item.image]} title={item.title} />
+            <ProductGallery images={[devPlaceholder(item.image)]} title={item.title} />
 
             {/* SPECS + REVIEWS */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -192,7 +192,7 @@ export default function ProductPage({ item, category, related }: Props) {
                     key={r.slug}
                     rank={1}
                     title={r.title}
-                    subtitle={r.subtitle}
+                    subtitle={r.subtitle ?? ''}
                     image={r.image}
                     price={r.price}
                     rating={r.rating}

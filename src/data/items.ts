@@ -6,14 +6,20 @@ import { TierMap } from "./tierMap";
 // 7 categories × 7 curated items
 // ------------------------------------------------------
 
+// Assuming this is your Item type definition
 export type Item = {
-    slug: string;
-    category: string;
-    title: string;
-    subtitle: string;
-    image: string;
-    price: string;
-    rating: number;
+  slug: string;
+  title: string;
+  category: string;
+  subtitle?: string;
+  image?: string;
+  price?: string;
+  rating?: number;
+  description?: string;
+  popularity?: number;  
+  reviews?: number;     
+  createdAt: string; 
+  [k: string]: any; 
 };
 
 // ------------------------------------------------------
