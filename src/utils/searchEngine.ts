@@ -13,6 +13,7 @@ export type Item = {
   price?: string;
   rating?: number;
   description?: string;
+  tier?: string;
   [k: string]: any;
 };
 

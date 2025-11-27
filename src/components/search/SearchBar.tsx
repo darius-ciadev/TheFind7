@@ -4,20 +4,12 @@ import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/router";
 import { searchItems } from "@/utils/searchEngine";
 import SearchSuggestions from "./SearchSuggestions";
+import { Item } from "@/utils/searchEngine";
 
 interface SearchBarProps {
   open: boolean;       
   onClose: () => void;
 }
-
-type Item = {
-  slug: string;
-  title: string;
-  category: string;
-  price: string | undefined;
-  rating: number;
-  image: string;
-};
 
 export default function SearchBar({ open, onClose }: SearchBarProps) {
   const router = useRouter();
@@ -26,6 +18,11 @@ export default function SearchBar({ open, onClose }: SearchBarProps) {
   const [activeIndex, setActiveIndex] = useState(0);
 
   const containerRef = useRef(null);
+
+  const formattedSuggestions = suggestions.map(item => ({
+  ...item,
+  image: item.image || "default-image-url", // Ensure the image is a valid string
+}));
 
   // ---------------------------------------------
   // Load suggestions
@@ -116,7 +113,7 @@ export default function SearchBar({ open, onClose }: SearchBarProps) {
         {/* Suggestions */}
         <div className="absolute left-0 right-0 top-[100%] px-6 pt-2">
           <SearchSuggestions
-                items={suggestions}
+                items={formattedSuggestions}
                 query={value}
                 activeIndex={activeIndex}
                 setActiveIndex={setActiveIndex}
