@@ -10,10 +10,19 @@ interface SearchBarProps {
   onClose: () => void;
 }
 
+type Item = {
+  slug: string;
+  title: string;
+  category: string;
+  price: string | undefined;
+  rating: number;
+  image: string;
+};
+
 export default function SearchBar({ open, onClose }: SearchBarProps) {
   const router = useRouter();
   const [value, setValue] = useState("");
-  const [suggestions, setSuggestions] = useState([]);
+  const [suggestions, setSuggestions] = useState<Item[]>([]);
   const [activeIndex, setActiveIndex] = useState(0);
 
   const containerRef = useRef(null);
@@ -27,12 +36,10 @@ export default function SearchBar({ open, onClose }: SearchBarProps) {
       return;
     }
 
-    const t = setTimeout(() => {
-      const results = searchItems(value);
-      setSuggestions(results);
-      console.log("search value:", value);
-      console.log("suggestions:", results);
-      setActiveIndex(0); // reset highlight
+   const t = setTimeout(() => {
+      const results = searchItems(value); // results should now match Item[] type
+      setSuggestions(results);           // No more type mismatch
+      setActiveIndex(0); 
     }, 180);
 
     return () => clearTimeout(t);
