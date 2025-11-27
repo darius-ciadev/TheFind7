@@ -1,3 +1,5 @@
+import { TierMap } from "./tierMap";
+
 // src/data/items.ts
 // ------------------------------------------------------
 // REAL PRODUCT DATA FOR THE FIND 7
@@ -497,15 +499,15 @@ const best_utility: Item[] = [
   },
 ];
 
-// ------------------------------------------------------
-// COMBINED EXPORT
-// ------------------------------------------------------
 export const items: Item[] = [
-    ...best_overall,
-    ...best_value,
-    ...best_premium,
-    ...best_kids,
-    ...best_eco,
-    ...cool_kids,
-    ...best_utility,
-];
+  ...best_overall,
+  ...best_value,
+  ...best_premium,
+  ...best_kids,
+  ...best_eco,
+  ...cool_kids,
+  ...best_utility,
+].map((item) => ({
+  ...item,
+  tier: TierMap[item.category] ?? "C",
+}));

@@ -2,6 +2,7 @@
 import React, { useState, ReactNode  } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import SearchBar from "@/components/search/SearchBar";
 
 const logoUrl = "/brand/the_find_7_logo.svg";
 
@@ -11,6 +12,7 @@ interface SiteLayoutProps {
 
 export default function SiteLayout({ children }: SiteLayoutProps) {
   const [open, setOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
 
   return (
     <div className="min-h-screen flex flex-col bg-background text-body">
@@ -46,7 +48,7 @@ export default function SiteLayout({ children }: SiteLayoutProps) {
             </Link>
 
             {/* Search Icon */}
-            <button className="ml-4">
+            <button className="ml-4" onClick={() => setSearchOpen(true)}>
               <svg className="w-6 h-6 text-[var(--green)] hover:text-[var(--green-dark)] transition"
                    fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round"
@@ -149,6 +151,8 @@ export default function SiteLayout({ children }: SiteLayoutProps) {
           </div>
         </div>
       </header>
+
+      <SearchBar open={searchOpen} onClose={() => setSearchOpen(false)} />
 
       {/* MAIN */}
       <main className="flex-1 pb-16">{children}</main>

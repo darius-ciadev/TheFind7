@@ -109,3 +109,77 @@ a {
   border-collapse: separate;
   border-spacing: 0;
 }
+
+.price-main {
+  @apply text-[var(--green)] font-extrabold;
+}
+
+@keyframes highlight-strong {
+  from { background-color: transparent; }
+  to { background-color: var(--green); }
+}
+
+@keyframes highlight-medium {
+  from { background-color: transparent; }
+  to { background-color: rgb(187 247 208); } /* light green */
+}
+
+@keyframes highlight-fuzzy {
+  from { text-decoration-color: transparent; }
+  to { text-decoration-color: rgb(74 222 128); } /* green-400 */
+}
+
+.animate-highlight-strong {
+  animation: highlight-strong 0.4s ease forwards;
+}
+
+.animate-highlight-medium {
+  animation: highlight-medium 0.4s ease forwards;
+}
+
+.animate-highlight-fuzzy {
+  animation: highlight-fuzzy 0.45s ease forwards;
+}
+
+@layer components {
+  .pill {
+    @apply flex items-center gap-2 
+           bg-[var(--green)] text-white font-medium text-xs
+           px-3 py-1 rounded-full shadow 
+           hover:bg-[var(--green-dark,#0f7d4b)] hover:shadow-md
+           transition;
+  }
+
+  .pill .close {
+    @apply text-[10px] opacity-80 hover:opacity-100 cursor-pointer;
+  }
+
+  .tier {
+    @apply inline-block mt-2 px-2 py-[3px] text-xs font-semibold rounded-full;
+  }
+
+  .tier-best {
+    @apply bg-green-600 text-white;
+  }
+
+  .tier-value {
+    @apply bg-[var(--green)] text-black;
+  }
+
+  .tier-premium {
+    @apply bg-black text-[var(--green)];
+  }
+}
+
+mark {
+  background: #bbf7d0;
+  color: #064e3b;
+  font-weight: 600;
+  padding: 0.15em 0.25em;
+  border-radius: 3px;
+}
+
+mark:hover {
+  background: rgba(0, 155, 117, 0.28);
+  transition: background 0.2s ease;
+}
