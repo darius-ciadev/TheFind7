@@ -1,6 +1,21 @@
 "use client";
 
-export default function ActiveFilters({ filters, onClearOne, onClearAll }) {
+interface Filters {
+  category: string | null;
+  price: string | null;
+  sortBy: string | null;
+  tier: string | null;
+}
+
+export default function ActiveFilters({
+  filters,
+  onClearOne,
+  onClearAll,
+}: {
+  filters: Filters;
+  onClearOne: (key: string) => void;
+  onClearAll: () => void;
+}) {
   const pills = [];
 
   // CATEGORY
@@ -20,7 +35,7 @@ export default function ActiveFilters({ filters, onClearOne, onClearAll }) {
     };
     pills.push({
       key: "price",
-      label: `Price: ${map[filters.price] || filters.price}`,
+      label: `Price: ${map[filters.price as keyof typeof map] || filters.price}`,
     });
   }
 
@@ -34,7 +49,7 @@ export default function ActiveFilters({ filters, onClearOne, onClearAll }) {
     };
     pills.push({
       key: "sortBy",
-      label: sortMap[filters.sortBy],
+      label: sortMap[filters.sortBy as keyof typeof sortMap] || "Unknown Sort Option", 
     });
   }
 

@@ -5,7 +5,12 @@ import { useRouter } from "next/router";
 import { searchItems } from "@/utils/searchEngine";
 import SearchSuggestions from "./SearchSuggestions";
 
-export default function SearchBar({ open, onClose }) {
+interface SearchBarProps {
+  open: boolean;       
+  onClose: () => void;
+}
+
+export default function SearchBar({ open, onClose }: SearchBarProps) {
   const router = useRouter();
   const [value, setValue] = useState("");
   const [suggestions, setSuggestions] = useState([]);

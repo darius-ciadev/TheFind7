@@ -1,14 +1,14 @@
-import { useSearchContext } from "@/hooks/useSearchContext";
+import useSearchState from "@/hooks/useSearchState";
 
 export function TierSection() {
-  const { filters, setFilters } = useSearchContext();
+  // Destructure tier and setTier directly from useSearchState
+  const { tier, setTier } = useSearchState();
+  
   const tiers = ["S", "A", "B", "C"];
 
+  // Function to toggle the selected tier
   function toggleTier(tier: string) {
-    setFilters((prev) => ({
-      ...prev,
-      tier: prev.tier === tier ? null : tier,
-    }));
+    setTier((prevTier) => (prevTier === tier ? null : tier)); // Toggle between the tier or null
   }
 
   return (
@@ -19,14 +19,12 @@ export function TierSection() {
         {tiers.map((t) => (
           <button
             key={t}
-            onClick={() => toggleTier(t)}
-            className={`
-              px-3 py-1 rounded-md text-sm font-bold border transition-all
-              ${filters.tier === t 
+            onClick={() => toggleTier(t)} // Toggle the tier selection on click
+            className={`px-3 py-1 rounded-md text-sm font-bold border transition-all
+              ${tier === t
                 ? "bg-purple-600 text-white shadow-[0_0_10px_rgba(180,60,255,0.8)] scale-[1.05]"
                 : "bg-gray-100 text-gray-700 hover:bg-purple-200"
-              }
-            `}
+              }`}
           >
             Tier {t}
           </button>

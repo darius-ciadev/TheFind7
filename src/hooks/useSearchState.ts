@@ -1,11 +1,20 @@
 import { useState, useEffect } from "react";
 
+// Define the types for each piece of state
+interface SearchState {
+  q: string;
+  category: string | null;
+  priceRange: [number, number] | null;
+  sort: string;
+  tier: string | null;
+}
+
 export default function useSearchState() {
-  const [q, setQ] = useState("");
+  const [q, setQ] = useState<string>("");
   const [category, setCategory] = useState<string | null>(null);
   const [priceRange, setPriceRange] = useState<[number, number] | null>(null);
-  const [sort, setSort] = useState("relevance");
-  const [tier, setTier] = useState<string | null>(null); // ⬅ NEW
+  const [sort, setSort] = useState<string>("relevance");
+  const [tier, setTier] = useState<string | null>(null); // New state for tier
 
   // ------------------------------------------------------
   // URL SYNC
@@ -22,16 +31,15 @@ export default function useSearchState() {
     if (sort) params.set("sort", sort);
     else params.delete("sort");
 
-    if (priceRange)
-      params.set("price", `${priceRange[0]}-${priceRange[1]}`);
+    if (priceRange) params.set("price", `${priceRange[0]}-${priceRange[1]}`);
     else params.delete("price");
 
-    if (tier) params.set("tier", tier);     // ⬅ NEW
-    else params.delete("tier");             // ⬅ NEW
+    if (tier) params.set("tier", tier);
+    else params.delete("tier");
 
     const url = `${window.location.pathname}?${params.toString()}`;
     window.history.replaceState({}, "", url);
-  }, [q, category, sort, priceRange, tier]); // ⬅ include tier
+  }, [q, category, sort, priceRange, tier]); // Make sure to include 'tier'
 
   // ------------------------------------------------------
   // INITIAL LOAD FROM URL
@@ -43,22 +51,18 @@ export default function useSearchState() {
     const category0 = params.get("category");
     const sort0 = params.get("sort") ?? "relevance";
     const p = params.get("price");
-    const tier0 = params.get("tier"); // ⬅ NEW
+    const tier0 = params.get("tier"); // Added handling for 'tier' param
 
     setQ(q0);
     setSort(sort0);
 
     if (category0) setCategory(category0);
-
-    if (tier0) setTier(tier0); // ⬅ NEW
+    if (tier0) setTier(tier0); // Set 'tier' state
 
     if (p) {
       const [a, b] = p.split("-").map(Number);
-      if (!Number.isNaN(a) && !Number.isNaN(b))
-        setPriceRange([a, b]);
+      if (!Number.isNaN(a) && !Number.isNaN(b)) setPriceRange([a, b]);
     }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // ------------------------------------------------------
@@ -73,7 +77,7 @@ export default function useSearchState() {
     setPriceRange,
     sort,
     setSort,
-    tier, 
-    setTier,
+    tier,
+    setTier, // Include 'setTier' for updating tier state
   };
 }

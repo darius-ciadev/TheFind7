@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import SearchBar from "@/components/search/SearchBar";
 
-const logoUrl = "/brand/the_find_7_logo.svg";
+const logoUrl = "/brand/logo_dark_512.png";
 
 interface SiteLayoutProps {
     children: ReactNode

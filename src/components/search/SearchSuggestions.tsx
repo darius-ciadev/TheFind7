@@ -7,13 +7,28 @@ import { devPlaceholder } from "@/utils/devPlaceholder";
 import { itemUrl } from "@/utils/urls"; 
 import { useRouter } from "next/router";
 
+interface SearchItem {
+  slug: string;
+  title: string;
+  category: string;
+  image: string;
+}
+
+interface SearchSuggestionsProps {
+  items: SearchItem[]; // Array of items
+  query: string;        // Search query string
+  activeIndex: number;  // Index of the active item
+  setActiveIndex: (index: number) => void; // Function to set the active index
+  onSelect: () => void; // Function to call when an item is selected
+}
+
 export default function SearchSuggestions({
   items = [],
   query = "",
   activeIndex,
   setActiveIndex,
   onSelect
-}) {
+}: SearchSuggestionsProps) {
   const router = useRouter();
 
   if (!query || items.length === 0) return null;
@@ -103,7 +118,7 @@ export default function SearchSuggestions({
               onMouseDown={(e) => {
                 e.preventDefault();
                 onSelect?.();
-                router.push(itemUrl(item.category, item.slug)); // 🚀 INSTANT
+                router.push(itemUrl(item.category, item.slug));
               }}
               className={`flex items-center gap-3 p-3 cursor-pointer transition
                 ${isActive ? "bg-gray-100" : "hover:bg-gray-50"}
