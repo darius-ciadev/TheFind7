@@ -6,16 +6,10 @@ import Link from "next/link";
 import { devPlaceholder } from "@/utils/devPlaceholder";
 import { itemUrl } from "@/utils/urls"; 
 import { useRouter } from "next/router";
-
-interface SearchItem {
-  slug: string;
-  title: string;
-  category: string;
-  image: string;
-}
+import { Item } from "@/utils/searchEngine";
 
 interface SearchSuggestionsProps {
-  items: SearchItem[]; // Array of items
+  items: Item[]; // Array of items
   query: string;        // Search query string
   activeIndex: number;  // Index of the active item
   setActiveIndex: (index: number) => void; // Function to set the active index
@@ -57,12 +51,14 @@ export default function SearchSuggestions({
 
       if (e.key === "ArrowDown") {
         e.preventDefault();
-        setActiveIndex((prev) => (prev + 1) % items.length);
+        const newIndex = (activeIndex + 1) % items.length; // Calculate new index
+        setActiveIndex(newIndex); // Set directly
       }
 
       if (e.key === "ArrowUp") {
         e.preventDefault();
-        setActiveIndex((prev) => (prev - 1 + items.length) % items.length);
+        const newIndex = (activeIndex - 1 + items.length) % items.length; // Calculate new index
+        setActiveIndex(newIndex); // Set directly
       }
 
       if (e.key === "Enter") {
@@ -73,7 +69,7 @@ export default function SearchSuggestions({
         onSelect?.();
 
         // Navigate to item
-        window.location.href = `/${item.category}/${item.slug}`;
+        router.push(itemUrl(item.category, item.slug)); // Navigate with router
       }
 
       if (e.key === "Escape") {
@@ -114,15 +110,14 @@ export default function SearchSuggestions({
             <li
               key={item.slug}
               data-index={i}
-              onMouseEnter={() => setActiveIndex(i)}
+              onMouseEnter={() => setActiveIndex(i)} // Directly set the active index
               onMouseDown={(e) => {
                 e.preventDefault();
                 onSelect?.();
-                router.push(itemUrl(item.category, item.slug));
+                router.push(itemUrl(item.category, item.slug)); // Navigate with router
               }}
               className={`flex items-center gap-3 p-3 cursor-pointer transition
-                ${isActive ? "bg-gray-100" : "hover:bg-gray-50"}
-              `}
+                ${isActive ? "bg-gray-100" : "hover:bg-gray-50"}`}
             >
               <Image
                 src={devPlaceholder(item.image)}
