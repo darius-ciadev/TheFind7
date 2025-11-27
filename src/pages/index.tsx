@@ -131,7 +131,7 @@ export default function HomePage() {
                 key={it.slug}
                 rank={idx + 1}
                 title={it.title}
-                subtitle={it.subtitle}
+                subtitle={it.subtitle ?? ''}
                 image={it.image}
                 price={it.price}
                 rating={it.rating}
