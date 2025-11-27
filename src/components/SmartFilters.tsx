@@ -125,7 +125,7 @@ export default function SmartFilters({ items, onChange, categories }: Props) {
       );
     }
 
-    if (selectedRating != null) out = out.filter((it) => it.rating >= selectedRating);
+    if (selectedRating != null) out = out.filter((it) => (it.rating ?? 0) >= selectedRating);
 
     out = out.filter((it) => it.priceNum >= priceRange[0] && it.priceNum <= priceRange[1]);
 
@@ -140,8 +140,13 @@ export default function SmartFilters({ items, onChange, categories }: Props) {
     const copy = out.slice();
     if (sortBy === "price-low-high") return copy.sort((a, b) => a.priceNum - b.priceNum);
     if (sortBy === "price-high-low") return copy.sort((a, b) => b.priceNum - a.priceNum);
-    if (sortBy === "rating-high-low") return copy.sort((a, b) => b.rating - a.rating);
-
+    if (sortBy === "rating-high-low") {
+      return copy.sort((a, b) => {
+        const ratingA = a.rating ?? 0;
+        const ratingB = b.rating ?? 0;
+        return ratingB - ratingA;
+      });
+    }
     return copy;
   }, [normalized, selectedCategory, selectedRating, priceRange, deferredSearch, sortBy, humanToIds]);
 

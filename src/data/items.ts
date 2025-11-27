@@ -34,6 +34,7 @@ const best_overall: Item[] = [
     image: "/products/overall1.jpg",
     price: "$199",
     rating: 4.8,
+    createdAt: '2025-12-01'
   },
   {
     slug: "overall-2",
@@ -43,6 +44,7 @@ const best_overall: Item[] = [
     image: "/products/overall2.jpg",
     price: "$149",
     rating: 4.7,
+    createdAt: '2025-12-01'
   },
   {
     slug: "overall-3",
@@ -52,6 +54,7 @@ const best_overall: Item[] = [
     image: "/products/overall3.jpg",
     price: "$179",
     rating: 4.7,
+    createdAt: '2025-12-01'
   },
   {
     slug: "overall-4",
@@ -61,6 +64,7 @@ const best_overall: Item[] = [
     image: "/products/overall4.jpg",
     price: "$169",
     rating: 4.6,
+    createdAt: '2025-12-01'
   },
   {
     slug: "overall-5",
@@ -70,6 +74,7 @@ const best_overall: Item[] = [
     image: "/products/overall5.jpg",
     price: "$159",
     rating: 4.6,
+    createdAt: '2025-12-01'
   },
   {
     slug: "overall-6",
@@ -79,6 +84,7 @@ const best_overall: Item[] = [
     image: "/products/overall6.jpg",
     price: "$139",
     rating: 4.5,
+    createdAt: '2025-12-01'
   },
   {
     slug: "overall-7",
@@ -88,6 +94,7 @@ const best_overall: Item[] = [
     image: "/products/overall7.jpg",
     price: "$129",
     rating: 4.4,
+    createdAt: '2025-12-01'
   },
 ];
 
@@ -103,6 +110,7 @@ const best_value: Item[] = [
     image: "/products/value1.jpg",
     price: "$89",
     rating: 4.6,
+    createdAt: '2025-12-01'
   },
   {
     slug: "value-2",
@@ -112,6 +120,7 @@ const best_value: Item[] = [
     image: "/products/value2.jpg",
     price: "$79",
     rating: 4.5,
+    createdAt: '2025-12-01'
   },
   {
     slug: "value-3",
@@ -121,6 +130,7 @@ const best_value: Item[] = [
     image: "/products/value3.jpg",
     price: "$69",
     rating: 4.4,
+    createdAt: '2025-12-01'
   },
   {
     slug: "value-4",
@@ -130,6 +140,7 @@ const best_value: Item[] = [
     image: "/products/value4.jpg",
     price: "$59",
     rating: 4.3,
+    createdAt: '2025-12-01'
   },
   {
     slug: "value-5",
@@ -139,6 +150,7 @@ const best_value: Item[] = [
     image: "/products/value5.jpg",
     price: "$65",
     rating: 4.3,
+    createdAt: '2025-12-01'
   },
   {
     slug: "value-6",
@@ -148,6 +160,7 @@ const best_value: Item[] = [
     image: "/products/value6.jpg",
     price: "$49",
     rating: 4.2,
+    createdAt: '2025-12-01'
   },
   {
     slug: "value-7",
@@ -157,6 +170,7 @@ const best_value: Item[] = [
     image: "/products/value7.jpg",
     price: "$39",
     rating: 4.1,
+    createdAt: '2025-12-01'
   },
 ];
 
@@ -172,6 +186,7 @@ const best_premium: Item[] = [
     image: "/products/premium1.jpg",
     price: "$399",
     rating: 4.9,
+    createdAt: '2025-12-01'
   },
   {
     slug: "premium-2",
@@ -181,6 +196,7 @@ const best_premium: Item[] = [
     image: "/products/premium2.jpg",
     price: "$349",
     rating: 4.8,
+    createdAt: '2025-12-01'
   },
   {
     slug: "premium-3",
@@ -190,6 +206,7 @@ const best_premium: Item[] = [
     image: "/products/premium3.jpg",
     price: "$329",
     rating: 4.8,
+    createdAt: '2025-12-01'
   },
   {
     slug: "premium-4",
@@ -199,6 +216,7 @@ const best_premium: Item[] = [
     image: "/products/premium4.jpg",
     price: "$309",
     rating: 4.7,
+    createdAt: '2025-12-01'
   },
   {
     slug: "premium-5",
@@ -208,6 +226,7 @@ const best_premium: Item[] = [
     image: "/products/premium5.jpg",
     price: "$289",
     rating: 4.7,
+    createdAt: '2025-12-01'
   },
   {
     slug: "premium-6",
@@ -217,6 +236,7 @@ const best_premium: Item[] = [
     image: "/products/premium6.jpg",
     price: "$279",
     rating: 4.6,
+    createdAt: '2025-12-01'
   },
   {
     slug: "premium-7",
@@ -226,6 +246,7 @@ const best_premium: Item[] = [
     image: "/products/premium7.jpg",
     price: "$259",
     rating: 4.6,
+    createdAt: '2025-12-01'
   },
 ];
 
@@ -241,6 +262,7 @@ const best_kids: Item[] = [
     image: "/products/kids1.jpg",
     price: "$49",
     rating: 4.6,
+    createdAt: '2025-12-01'
   },
   {
     slug: "kids-2",
@@ -250,6 +272,7 @@ const best_kids: Item[] = [
     image: "/products/kids2.jpg",
     price: "$39",
     rating: 4.5,
+    createdAt: '2025-12-01'
   },
   {
     slug: "kids-3",
@@ -259,6 +282,7 @@ const best_kids: Item[] = [
     image: "/products/kids3.jpg",
     price: "$35",
     rating: 4.4,
+    createdAt: '2025-12-01'
   },
   {
     slug: "kids-4",
@@ -268,6 +292,7 @@ const best_kids: Item[] = [
     image: "/products/kids4.jpg",
     price: "$29",
     rating: 4.4,
+    createdAt: '2025-12-01'
   },
   {
     slug: "kids-5",
@@ -277,6 +302,7 @@ const best_kids: Item[] = [
     image: "/products/kids5.jpg",
     price: "$32",
     rating: 4.3,
+    createdAt: '2025-12-01'
   },
   {
     slug: "kids-6",
@@ -286,6 +312,7 @@ const best_kids: Item[] = [
     image: "/products/kids6.jpg",
     price: "$27",
     rating: 4.2,
+    createdAt: '2025-12-01'
   },
   {
     slug: "kids-7",
@@ -295,6 +322,7 @@ const best_kids: Item[] = [
     image: "/products/kids7.jpg",
     price: "$25",
     rating: 4.1,
+    createdAt: '2025-12-01'
   },
 ];
 
@@ -310,6 +338,7 @@ const best_eco: Item[] = [
     image: "/products/eco1.jpg",
     price: "$129",
     rating: 4.7,
+    createdAt: '2025-12-01'
   },
   {
     slug: "eco-2",
@@ -319,6 +348,7 @@ const best_eco: Item[] = [
     image: "/products/eco2.jpg",
     price: "$119",
     rating: 4.6,
+    createdAt: '2025-12-01'
   },
   {
     slug: "eco-3",
@@ -328,6 +358,7 @@ const best_eco: Item[] = [
     image: "/products/eco3.jpg",
     price: "$99",
     rating: 4.5,
+    createdAt: '2025-12-01'
   },
   {
     slug: "eco-4",
@@ -337,6 +368,7 @@ const best_eco: Item[] = [
     image: "/products/eco4.jpg",
     price: "$89",
     rating: 4.4,
+    createdAt: '2025-12-01'
   },
   {
     slug: "eco-5",
@@ -346,6 +378,7 @@ const best_eco: Item[] = [
     image: "/products/eco5.jpg",
     price: "$79",
     rating: 4.4,
+    createdAt: '2025-12-01'
   },
   {
     slug: "eco-6",
@@ -355,6 +388,7 @@ const best_eco: Item[] = [
     image: "/products/eco6.jpg",
     price: "$69",
     rating: 4.3,
+    createdAt: '2025-12-01'
   },
   {
     slug: "eco-7",
@@ -364,6 +398,7 @@ const best_eco: Item[] = [
     image: "/products/eco7.jpg",
     price: "$59",
     rating: 4.2,
+    createdAt: '2025-12-01'
   },
 ];
 
@@ -379,6 +414,7 @@ const cool_kids: Item[] = [
     image: "/products/cool1.jpg",
     price: "$159",
     rating: 4.8,
+    createdAt: '2025-12-0'
   },
   {
     slug: "cool-2",
@@ -388,6 +424,7 @@ const cool_kids: Item[] = [
     image: "/products/cool2.jpg",
     price: "$149",
     rating: 4.7,
+    createdAt: '2025-12-0'
   },
   {
     slug: "cool-3",
@@ -397,6 +434,7 @@ const cool_kids: Item[] = [
     image: "/products/cool3.jpg",
     price: "$139",
     rating: 4.6,
+    createdAt: '2025-12-0'
   },
   {
     slug: "cool-4",
@@ -406,6 +444,7 @@ const cool_kids: Item[] = [
     image: "/products/cool4.jpg",
     price: "$129",
     rating: 4.5,
+    createdAt: '2025-12-0'
   },
   {
     slug: "cool-5",
@@ -415,6 +454,7 @@ const cool_kids: Item[] = [
     image: "/products/cool5.jpg",
     price: "$119",
     rating: 4.4,
+    createdAt: '2025-12-0'
   },
   {
     slug: "cool-6",
@@ -424,6 +464,7 @@ const cool_kids: Item[] = [
     image: "/products/cool6.jpg",
     price: "$109",
     rating: 4.3,
+    createdAt: '2025-12-0'
   },
   {
     slug: "cool-7",
@@ -433,6 +474,7 @@ const cool_kids: Item[] = [
     image: "/products/cool7.jpg",
     price: "$99",
     rating: 4.2,
+    createdAt: '2025-12-0'
   },
 ];
 
@@ -448,6 +490,7 @@ const best_utility: Item[] = [
     image: "/products/utility1.jpg",
     price: "$89",
     rating: 4.8,
+    createdAt: '2025-12-01'
   },
   {
     slug: "utility-2",
@@ -457,6 +500,7 @@ const best_utility: Item[] = [
     image: "/products/utility2.jpg",
     price: "$79",
     rating: 4.7,
+    createdAt: '2025-12-01'
   },
   {
     slug: "utility-3",
@@ -466,6 +510,7 @@ const best_utility: Item[] = [
     image: "/products/utility3.jpg",
     price: "$69",
     rating: 4.6,
+    createdAt: '2025-12-01'
   },
   {
     slug: "utility-4",
@@ -475,6 +520,7 @@ const best_utility: Item[] = [
     image: "/products/utility4.jpg",
     price: "$59",
     rating: 4.5,
+    createdAt: '2025-12-01'
   },
   {
     slug: "utility-5",
@@ -484,6 +530,7 @@ const best_utility: Item[] = [
     image: "/products/utility5.jpg",
     price: "$55",
     rating: 4.4,
+    createdAt: '2025-12-01'
   },
   {
     slug: "utility-6",
@@ -493,6 +540,7 @@ const best_utility: Item[] = [
     image: "/products/utility6.jpg",
     price: "$49",
     rating: 4.3,
+    createdAt: '2025-12-01'
   },
   {
     slug: "utility-7",
@@ -502,6 +550,7 @@ const best_utility: Item[] = [
     image: "/products/utility7.jpg",
     price: "$45",
     rating: 4.2,
+    createdAt: '2025-12-01'
   },
 ];
 
