@@ -16,7 +16,7 @@ export const filterByPrice = (
   max: number
 ): Item[] => {
   return items.filter((item) => {
-    const value = parsePrice(item.price);
+    const value = parsePrice(item.price ?? '');
     return value >= min && value <= max;
   });
 };
@@ -25,7 +25,7 @@ export const filterByPrice = (
  * Filter by minimum rating
  */
 export const filterByRating = (items: Item[], minRating: number): Item[] => {
-  return items.filter((item) => item.rating >= minRating);
+  return items.filter((item) => item.rating ?? 0 >= minRating);
 };
 
 /**
@@ -39,6 +39,6 @@ export const searchItems = (items: Item[], query: string): Item[] => {
   return items.filter(
     (item) =>
       item.title.toLowerCase().includes(q) ||
-      item.subtitle.toLowerCase().includes(q)
+      (item.subtitle ?? "").toLowerCase().includes(q) // Fallback to empty string if subtitle is undefined
   );
 };

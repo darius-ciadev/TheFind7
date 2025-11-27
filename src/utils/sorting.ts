@@ -14,7 +14,7 @@ export const sortByRank = (items: Item[]): Item[] => {
  */
 export const sortByPriceLowToHigh = (items: Item[]): Item[] => {
   return [...items].sort(
-    (a, b) => parsePrice(a.price) - parsePrice(b.price)
+    (a, b) => parsePrice(a.price ?? "0") - parsePrice(b.price ?? "0")
   );
 };
 
@@ -23,7 +23,7 @@ export const sortByPriceLowToHigh = (items: Item[]): Item[] => {
  */
 export const sortByPriceHighToLow = (items: Item[]): Item[] => {
   return [...items].sort(
-    (a, b) => parsePrice(b.price) - parsePrice(a.price)
+    (a, b) => parsePrice(b.price ?? "0") - parsePrice(a.price ?? "0")
   );
 };
 
@@ -31,5 +31,5 @@ export const sortByPriceHighToLow = (items: Item[]): Item[] => {
  * Sort by user rating
  */
 export const sortByRating = (items: Item[]): Item[] => {
-  return [...items].sort((a, b) => b.rating - a.rating);
+  return [...items].sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0));
 };
