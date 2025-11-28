@@ -1,6 +1,6 @@
 // pages/auth/login.tsx
 import { useState, FormEvent } from 'react';
-import { EyeIcon, EyeSlash } from '@heroicons/react/20/solid'; 
+import { EyeIcon, EyeSlashIcon } from '@heroicons/react/20/solid'; 
 import { Input } from '@shadcn/ui';
 
 interface LoginForm {
@@ -85,7 +85,7 @@ export default function LoginPage() {
                 className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500"
               >
                 {showPassword ? (
-                  <EyeSlash className="h-5 w-5" />
+                  <EyeSlashIcon className="h-5 w-5" />
                 ) : (
                   <EyeIcon className="h-5 w-5" />
                 )}
