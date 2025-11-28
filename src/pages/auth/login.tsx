@@ -1,7 +1,7 @@
 // pages/auth/login.tsx
 import { useState, FormEvent } from 'react';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/20/solid'; 
-import { Input } from '@shadcn/ui';
+import Input from '@/components/ui/input';
 
 interface LoginForm {
   email: string;
@@ -58,6 +58,7 @@ export default function LoginPage() {
               id="email"
               name="email"
               type="email"
+              label="email"
               value={formData.email}
               onChange={handleChange}
               className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
@@ -73,6 +74,7 @@ export default function LoginPage() {
               <Input
                 id="password"
                 name="password"
+                label="password"
                 type={showPassword ? 'text' : 'password'}
                 value={formData.password}
                 onChange={handleChange}
