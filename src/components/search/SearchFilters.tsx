@@ -2,6 +2,7 @@
 import React from "react";
 import { CollapsibleFilterSection } from "./CollapsibleFilterSection";
 import PriceRangeSlider from "./PriceRangeSlider";
+import Button from "../ui/button";
 
 export default function SearchFilters({
   filters,
@@ -20,6 +21,18 @@ export default function SearchFilters({
       ...prev,
       [key]: null,
     }));
+  };
+
+  const toggleTier = (tier: string) => {
+    setFilters((prev: any) => {
+      const exists = prev.tier.includes(tier);
+      return {
+        ...prev,
+        tier: exists
+          ? prev.tier.filter((t: string) => t !== tier)
+          : [...prev.tier, tier],
+      };
+    });
   };
 
   const categories = ["All", "Electronics", "Home", "Outdoors", "Apparel"];
@@ -72,31 +85,75 @@ export default function SearchFilters({
         </div>
       </CollapsibleFilterSection>
 
-      {/* Tier Filter */}
       <CollapsibleFilterSection title="Tier">
-        <div className="flex flex-wrap gap-2">
-          {["S", "A", "B", "C"].map((tier) => (
-            <button
-              key={tier}
-              onClick={() => update({ tier })}
-              className={`px-3 py-1 text-sm rounded-md font-bold shadow-sm transition
-          ${
-            filters.tier === tier
-              ? "bg-purple-600 text-white shadow-[0_0_12px_rgba(191,90,255,.9)]"
-              : "bg-gray-100 hover:bg-gray-200 text-gray-700"
-          }`}
-            >
-              Tier {tier}
-            </button>
-          ))}
+        <div className="grid grid-cols-2 gap-3 mt-2">
+          {[
+            {
+              tier: "S",
+              label: "Tier S",
+              icon: "💎",
+              bg: "from-purple-500 to-pink-500",
+              text: "text-white",
+            },
+            {
+              tier: "A",
+              label: "Tier A",
+              icon: "🔥",
+              bg: "from-orange-500 to-red-500",
+              text: "text-white",
+            },
+            {
+              tier: "B",
+              label: "Tier B",
+              icon: "⭐",
+              bg: "from-yellow-300 to-amber-300",
+              text: "text-black",
+            },
+            {
+              tier: "C",
+              label: "Tier C",
+              icon: "⚪",
+              bg: "from-gray-200 to-gray-300",
+              text: "text-gray-800",
+            },
+          ].map(({ tier, label, icon, bg, text }) => {
+            const active = filters.tier?.includes?.(tier);
 
-          {filters.tier && (
-            <button
-              onClick={() => clearFilter("tier")}
-              className="text-xs underline text-gray-500 ml-2"
+            return (
+              <Button
+                key={tier}
+                onClick={() => {
+                  const current = filters.tier || [];
+                  const updated = active
+                    ? current.filter((t:string) => t !== tier)
+                    : [...current, tier];
+                  update({ tier: updated });
+                }}
+                className={`
+            flex items-center justify-center gap-2 py-3 rounded-xl 
+            font-semibold uppercase tracking-wide shadow-md
+            bg-gradient-to-br ${bg} ${text} transition-all
+
+            ${
+              active
+                ? "scale-[1.05] ring-2 ring-black/20 shadow-[0_0_18px_rgba(0,0,0,0.25)]"
+                : "opacity-80 hover:opacity-100"
+            }
+          `}
+              >
+                <span className="text-lg">{icon}</span>
+                {label}
+              </Button>
+            );
+          })}
+
+          {filters.tier?.length > 0 && (
+            <Button
+              onClick={() => update({ tier: [] })}
+              className="text-sm underline text-gray-500 mt-2 col-span-2 text-center"
             >
-              Clear
-            </button>
+              Clear Tier Filter
+            </Button>
           )}
         </div>
       </CollapsibleFilterSection>

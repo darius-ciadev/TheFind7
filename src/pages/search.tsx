@@ -14,6 +14,7 @@ import { motion, AnimatePresence } from "framer-motion";
 
 import SearchFilters from "@/components/search/SearchFilters";
 import FilterPills from "@/components/search/FilterPills";
+import TierLegend from "@/components/search/TierLegend";
 import { getTierIcon } from "@/lib/tierIcons";
 
 import { searchItems } from "@/utils/searchEngine";
@@ -50,18 +51,42 @@ export default function SearchPage() {
   const searchParams = useSearchParams();
   const qParam = searchParams.get("q") || "";
 
+  const tierParam = searchParams.get("tier");
+
+  useEffect(() => {
+    if (tierParam) {
+      setFilters((prev: any) => ({
+        ...prev,
+        tier: tierParam.split(","),
+      }));
+    }
+  }, [tierParam]);
+
   // UI state
   const [query, setQuery] = useState<string>(qParam || "");
   const [allResults, setAllResults] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  const [tierFilter, setTierFilter] = useState<string | null>(null);
 
   // filters object expected by SearchFilters in your current project
   const [filters, setFilters] = useState<any>({
     category: null,
     price: null,
     sortBy: "relevance",
+    tier: [],
   });
+
+  useEffect(() => {
+    const params = new URLSearchParams(searchParams.toString());
+
+    // Safely handle the case where filters.tier is undefined or not an array
+    if (Array.isArray(filters.tier) && filters.tier.length > 0) {
+      params.set("tier", filters.tier.join(","));
+    } else {
+      params.delete("tier");
+    }
+
+    router.replace(`/search?${params.toString()}`);
+  }, [filters.tier]);
 
   // Pagination / infinite scroll (client-side slice)
   const PER_PAGE = 12;
@@ -70,6 +95,21 @@ export default function SearchPage() {
 
   // mobile filter drawer
   const [showFiltersMobile, setShowFiltersMobile] = useState(false);
+
+  const toggleTier = (tier: string) => {
+    setFilters((prev: any) => {
+      const exists = prev.tier.includes(tier);
+
+      return {
+        ...prev,
+        tier: exists
+          ? prev.tier.filter((t: string) => t !== tier)
+          : [...prev.tier, tier], // add
+      };
+    });
+
+    setPage(1);
+  };
 
   // Debounce the live search to avoid extremely frequent router changes
   const debouncedPush = useRef<number | null>(null);
@@ -84,6 +124,16 @@ export default function SearchPage() {
       if (debouncedPush.current) window.clearTimeout(debouncedPush.current);
     };
   }, [query, router]);
+
+  // ⭐ Sync TIER to URL (?tier=S,A,B)
+  useEffect(() => {
+    const q = searchParams.get("q") || "";
+
+    const tierString =
+      filters.tier?.length > 0 ? `&tier=${filters.tier.join(",")}` : "";
+
+    router.replace(`/search?q=${q}${tierString}`, { scroll: false });
+  }, [filters.tier]);
 
   // Run search when url q param changes OR filters update
   useEffect(() => {
@@ -149,6 +199,11 @@ export default function SearchPage() {
       arr = arr.filter((i) => priceGroup(i.price) === filters.price);
     }
 
+    // TIER (MULTI SELECT)
+    if (filters.tier && filters.tier.length > 0) {
+      arr = arr.filter((item) => filters.tier.includes(getTier(item)));
+    }
+
     // Sorting
     if (filters.sortBy === "price_low") {
       arr.sort(
@@ -168,6 +223,15 @@ export default function SearchPage() {
     // relevance assumed handled by searchItems
 
     return arr;
+
+    // ⭐ Tier Priority Sorting (S → A → B → C)
+    const tierOrder = { S: 1, A: 2, B: 3, C: 4 };
+
+    arr.sort((a, b) => {
+      const tA = tierOrder[getTier(a)] ?? 999;
+      const tB = tierOrder[getTier(b)] ?? 999;
+      return tA - tB;
+    });
   }, [allResults, filters]);
 
   // slice for pagination (client-side)
@@ -257,6 +321,29 @@ export default function SearchPage() {
 
           {/* Results */}
           <div>
+            <TierLegend selectedTiers={filters.tier} onToggle={toggleTier} />
+
+            {/* ⭐ Tier Pills (click to remove) */}
+            {filters.tier?.length > 0 && (
+              <div className="flex gap-2 mb-4">
+                {filters.tier.map((t: string) => (
+                  <span
+                    key={t}
+                    className="inline-flex items-center gap-2 px-3 py-1 rounded-md text-sm 
+                   font-bold bg-black text-white"
+                  >
+                    Tier {t}
+                    <button
+                      onClick={() => toggleTier(t)}
+                      className="opacity-70 hover:opacity-100"
+                    >
+                      ✕
+                    </button>
+                  </span>
+                ))}
+              </div>
+            )}
+
             {/* active filters + result count + SORTING DROPDOWN (Upgrade E) */}
             <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
               <div className="flex-1 min-w-[200px]">
@@ -423,29 +510,35 @@ export default function SearchPage() {
                             }}
                           />
 
-                          {/* Tier Badge — pulsing + premium glow */}
                           {tier && (
                             <span
                               className={`
-                              inline-flex items-center gap-1 px-3 py-1 mt-2 rounded-md text-sm font-bold 
-                              transition-all duration-300 select-none
-                              ${
-                                tier === "S" &&
-                                "bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-[0_0_22px_rgba(193,88,255,0.95)] scale-[1.05]"
-                              }
-                              ${
-                                tier === "A" &&
-                                "bg-red-500 text-white shadow-[0_0_14px_rgba(255,60,60,0.7)]"
-                              }
-                              ${
-                                tier === "B" &&
-                                "bg-yellow-400 text-black shadow-[0_0_8px_rgba(255,234,50,0.6)]"
-                              }
-                              ${tier === "C" && "bg-gray-300 text-gray-700 shadow-sm"}
-                              hover:scale-[1.07]
-                            `}
+                                    inline-flex items-center gap-1 px-3 py-1 mt-2 rounded-md text-sm font-bold 
+                                    uppercase tracking-wide transition-all select-none
+                                    ${
+                                      tier === "S" &&
+                                      "bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-[0_0_20px_rgba(193,88,255,0.95)]"
+                                    }
+                                    ${
+                                      tier === "A" &&
+                                      "bg-gradient-to-r from-orange-500 to-red-500 text-white shadow-[0_0_14px_rgba(255,60,60,0.8)]"
+                                    }
+                                    ${
+                                      tier === "B" &&
+                                      "bg-gradient-to-r from-yellow-300 to-amber-300 text-black shadow-[0_0_10px_rgba(255,234,50,0.75)]"
+                                    }
+                                    ${
+                                      tier === "C" &&
+                                      "bg-gradient-to-r from-gray-200 to-gray-300 text-gray-800 shadow-sm"
+                                    }
+                                    hover:scale-[1.07]
+                                  `}
+                              title={`This item is ranked Tier ${tier}`}
                             >
-                              {getTierIcon(tier)} Tier {tier}
+                              <span className="text-base">
+                                {getTierIcon(tier)}
+                              </span>
+                              Tier {tier}
                             </span>
                           )}
 

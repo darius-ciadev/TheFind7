@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import SearchResultsInfinite from "./SearchResultsInfinite";
+import { Item, searchItems } from "@/utils/searchEngine";
 
 export default function SearchResults({
   items,
@@ -15,11 +16,30 @@ export default function SearchResults({
   onLoadMore: () => void;
 }) {
 
-  const [activeTier, setActiveTier] = useState<string | null>(null);
+  const [filters, setFilters] = useState({ tier: null, category: null, price: null });
+  const [allResults, setAllResults] = useState<Item[]>([]);
+
+  const updateFilter = (key: string, value: any) => {
+    setFilters((prevFilters) => {
+      const updatedFilters = { ...prevFilters, [key]: value };
+      console.log("Filters updated:", updatedFilters);  // Debug filter update
+      return updatedFilters;
+    });
+  };
 
   const selectTier = (tier: string | null) => {
-    setActiveTier(tier);
+    updateFilter("tier", tier);
   };
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const results = searchItems("query");  // Replace with actual logic for searchItems
+      setAllResults(results);
+      console.log("All results:", results); // Debug search result
+    };
+    fetchData();
+  }, []);
 
   return (
     <main className="grid grid-cols-[250px_1fr] gap-6">
@@ -33,14 +53,14 @@ export default function SearchResults({
             key={t}
             onClick={() => selectTier(t)}
             className={`px-3 py-1 rounded text-sm border ${
-              activeTier === t ? "bg-black text-white" : "bg-white"
+              filters.tier === t ? "bg-black text-white" : "bg-white"
             }`}
           >
             Tier {t}
           </button>
         ))}
 
-        {activeTier && (
+        {filters.tier && (
           <button onClick={() => selectTier(null)} className="text-xs mt-2 underline opacity-70">
             Clear
           </button>
@@ -49,12 +69,12 @@ export default function SearchResults({
 
       {/* ───── RESULTS + FILTER ACTIVE ───── */}
       <SearchResultsInfinite
-        items={items}
+        items={allResults}
         ItemCard={ItemCard}
         isLoading={isLoading}
         hasMore={hasMore}
         onLoadMore={onLoadMore}
-        filters={{ tier: activeTier ?? undefined }}
+        filters={filters}
       />
 
     </main>

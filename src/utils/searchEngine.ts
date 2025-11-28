@@ -82,7 +82,7 @@ function computeScore(item: Item, q: string): number {
 }
 
 // ------------------------------------------------------
-// MAIN SEARCH FUNCTION
+// MAIN SEARCH FUNCTION WITH FILTERS
 // ------------------------------------------------------
 export function searchItems(query: string): Item[] {
   if (!query || typeof query !== "string") return [];
@@ -90,13 +90,15 @@ export function searchItems(query: string): Item[] {
   const q = query.toLowerCase().trim();
   if (!q) return [];
 
-  return items
+  const filteredItems = items
     .map((item) => ({
       ...item,
       __score: computeScore(item, q),
     }))
     .filter((i) => i.__score > 0)
     .sort((a, b) => b.__score - a.__score);
+
+  return filteredItems;
 }
 
 export { items };

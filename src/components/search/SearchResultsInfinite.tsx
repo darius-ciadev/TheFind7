@@ -14,17 +14,17 @@ export default function SearchResultsInfinite({
   isLoading: boolean;
   hasMore: boolean;
   onLoadMore: () => void;
-  filters?: { tier?: string }; 
+  filters?: { tier?: string | null }; 
 }) {
   const sentinel = useRef<HTMLDivElement | null>(null);
 
   // Step 1: Filter items by tier (if applicable)
   const filteredItems = useMemo(() => {
-    // If a tier filter is set, filter items based on their tier
     if (filters?.tier) {
-      return items.filter((item) => getTier(item) === filters.tier);
+      const filtered = items.filter((item) => getTier(item) === filters.tier);
+      console.log("Filtered Items:", filtered);  // Log filtered items for debugging
+      return filtered;
     }
-    // Otherwise, return all items
     return items;
   }, [items, filters?.tier]);  // Recalculate whenever items or filters.tier change
 
