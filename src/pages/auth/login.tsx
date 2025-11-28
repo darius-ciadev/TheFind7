@@ -1,7 +1,7 @@
 // pages/auth/login.tsx
 import { useState, FormEvent } from 'react';
-import { EyeIcon, EyeOffIcon } from '@heroicons/react/20/solid'; // Heroicons
-import { Input } from '@shadcn/ui'; // ShadCN components
+import { EyeIcon, EyeSlash } from '@heroicons/react/20/solid'; 
+import { Input } from '@shadcn/ui';
 
 interface LoginForm {
   email: string;
@@ -85,7 +85,7 @@ export default function LoginPage() {
                 className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500"
               >
                 {showPassword ? (
-                  <EyeOffIcon className="h-5 w-5" />
+                  <EyeSlash className="h-5 w-5" />
                 ) : (
                   <EyeIcon className="h-5 w-5" />
                 )}
