@@ -49,7 +49,7 @@ export const getCategoryPageData = (params: CategoryPageParams) => {
   items = searchItems(items, search);
 
   // 4) Apply price range
-  items = filterByPrice(items, minPrice, maxPrice);
+  items = filterByPrice(items, [minPrice, maxPrice]);
 
   // 5) Minimum rating filter
   items = filterByRating(items, minRating);
