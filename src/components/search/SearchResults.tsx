@@ -118,16 +118,16 @@ export default function SearchResults({
     if (sortBy === "price_low") {
       arr.sort(
         (a, b) =>
-          parseFloat(a.price.replace("$", "")) -
-          parseFloat(b.price.replace("$", ""))
+          parseFloat((a.price ?? "$0").replace("$", "")) -
+          parseFloat((b.price ?? "$0").replace("$", ""))
       );
     }
 
     if (sortBy === "price_high") {
       arr.sort(
         (a, b) =>
-          parseFloat(b.price.replace("$", "")) -
-          parseFloat(a.price.replace("$", ""))
+          parseFloat((b.price ?? "$0").replace("$", "")) -
+          parseFloat((a.price ?? "$0").replace("$", ""))
       );
     }
 
@@ -147,7 +147,7 @@ export default function SearchResults({
   const setTier = (t: string) => updateParam("tier", t);
   const clearTier = () => updateParam("tier", null);
   const setSort = (v: string) => updateParam("sortBy", v);
-  const setPrice = (v: string) => updateParam("price", v); // "budget" | "mid" | "premium" 
+  const setPrice = (v: string) => updateParam("price", v); // "budget" | "mid" | "premium"
   const clearPrice = () => updateParam("price", null);
 
   /* ------------------------------------------------------ */
@@ -168,12 +168,10 @@ export default function SearchResults({
 
   return (
     <main className="grid grid-cols-[260px_1fr] gap-6 pb-20 pt-4">
-
       {/* ---------------------------------- */}
       {/* SIDEBAR LEFT                       */}
       {/* ---------------------------------- */}
       <aside className="border rounded-xl bg-white p-4 space-y-6 shadow-sm">
-
         {/* COLLECTIONS */}
         <div>
           <h3 className="font-semibold mb-2">Collections</h3>
@@ -263,7 +261,6 @@ export default function SearchResults({
             </button>
           )}
         </div>
-
       </aside>
 
       {/* ---------------------------------- */}
