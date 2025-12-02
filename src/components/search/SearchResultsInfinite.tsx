@@ -1,5 +1,13 @@
+"use client";
+
 import React, { useRef, useEffect, useMemo } from "react";
 import { getTier } from "@/lib/getTier";
+
+type Filters = {
+  tier?: string | null;          // "S", "A", "B", "C"
+  price?: string | null;         // "budget" | "mid" | "premium"
+  collection?: string | null;    // curated category key
+};
 
 export default function SearchResultsInfinite({
   items,
@@ -7,34 +15,67 @@ export default function SearchResultsInfinite({
   isLoading,
   hasMore,
   onLoadMore,
-  filters
+  filters = {},
 }: {
   items: any[];
   ItemCard: React.ComponentType<{ item: any }>;
   isLoading: boolean;
   hasMore: boolean;
   onLoadMore: () => void;
-  filters?: { tier?: string | null }; 
+  filters?: Filters;
 }) {
+  
   const sentinel = useRef<HTMLDivElement | null>(null);
 
-  // Step 1: Filter items by tier (if applicable)
-  const filteredItems = useMemo(() => {
-    if (filters?.tier) {
-      const filtered = items.filter((item) => getTier(item) === filters.tier);
-      console.log("Filtered Items:", filtered);  // Log filtered items for debugging
-      return filtered;
-    }
-    return items;
-  }, [items, filters?.tier]);  // Recalculate whenever items or filters.tier change
+  // -------------------------------------------------------
+  // PRICE HELPER
+  // -------------------------------------------------------
+  const priceNum = (price: string | undefined) =>
+    parseFloat(price?.replace(/[^0-9.]/g, "") || "0");
 
-  // Step 2: Set up infinite scroll observer
+  // -------------------------------------------------------
+  // APPLY ALL FILTERS IN ONE MEMO BLOCK
+  // -------------------------------------------------------
+  const filteredItems = useMemo(() => {
+    let arr = [...items];
+
+    // 1) COLLECTION (category)
+    if (filters.collection) {
+      arr = arr.filter((i) => i.category === filters.collection);
+    }
+
+    // 2) TIER
+    if (filters.tier) {
+      arr = arr.filter((i) => getTier(i) === filters.tier);
+    }
+
+    // 3) PRICE RANGE GROUPS
+    if (filters.price) {
+      arr = arr.filter((i) => {
+        const p = priceNum(i.price);
+
+        if (filters.price === "budget") return p <= 50;
+        if (filters.price === "mid") return p > 50 && p <= 150;
+        if (filters.price === "premium") return p > 150;
+
+        return true;
+      });
+    }
+
+    return arr;
+  }, [items, filters.collection, filters.tier, filters.price]);
+
+  // -------------------------------------------------------
+  // INFINITE SCROLL
+  // -------------------------------------------------------
   useEffect(() => {
     if (!sentinel.current || !hasMore) return;
 
     const obs = new IntersectionObserver(
       (entries) => {
-        entries.forEach((e) => e.isIntersecting && onLoadMore());
+        entries.forEach((e) => {
+          if (e.isIntersecting) onLoadMore();
+        });
       },
       { rootMargin: "300px" }
     );
@@ -43,18 +84,21 @@ export default function SearchResultsInfinite({
     return () => obs.disconnect();
   }, [onLoadMore, hasMore]);
 
+  // -------------------------------------------------------
+  // RENDER
+  // -------------------------------------------------------
   return (
     <>
-      {/* Display filtered items */}
+      {/* Results */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {filteredItems.map((it) => (
-          <ItemCard key={it.id} item={it} />
+        {filteredItems.map((item) => (
+          <ItemCard key={item.slug || item.id} item={item} />
         ))}
       </div>
 
-      {/* Loading more or no more results */}
+      {/* Infinite scroll sentinel */}
       <div className="mt-6 flex flex-col items-center">
-        {isLoading && <div className="py-4">Loading more...</div>}
+        {isLoading && <div className="py-4 text-sm text-gray-600">Loading...</div>}
         {!hasMore && (
           <div className="py-4 text-sm text-gray-500">No more results</div>
         )}

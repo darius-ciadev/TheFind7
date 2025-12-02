@@ -8,7 +8,6 @@ import Seo from "@/components/Seo";
 import Hero from "@/components/Hero";
 import ValueProps from "@/components/ValueProps";
 import CategoryCard from "@/components/CategoryCard";
-import ItemCard from "@/components/ItemCard";
 import { categories } from "@/data/categories";
 import { items } from "@/data/items";
 import { useReveal } from "@/hooks/useReveal";
@@ -23,6 +22,8 @@ const TopPicksCarousel = dynamic(
     ),
   }
 );
+
+import WhySeven from "@/components/WhySeven";
 
 export default function HomePage() {
   const { ref, visible } = useReveal();
@@ -65,7 +66,7 @@ export default function HomePage() {
       {/* -------------------------------------------------- */}
       {/* CATEGORY GRID */}
       {/* -------------------------------------------------- */}
-      <section className="bg-white py-20">
+      <section id="browse-categories" className="bg-white py-20 scroll-mt-32">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-14">
             <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight">
@@ -113,35 +114,10 @@ export default function HomePage() {
       </section>
 
       {/* -------------------------------------------------- */}
-      {/* FEATURED RESULTS */}
+      {/* WHY 7 — Brand Story Section */}
       {/* -------------------------------------------------- */}
-      <section className="bg-white py-20">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="flex items-center justify-between mb-8">
-            <h3 className="text-xl font-semibold">Featured results</h3>
+      <WhySeven />
 
-            <span className="text-sm text-neutral">
-              Showing {trending.length} recommendations
-            </span>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {trending.map((it, idx) => (
-              <ItemCard
-                key={it.slug}
-                rank={idx + 1}
-                title={it.title}
-                subtitle={it.subtitle ?? ''}
-                image={it.image}
-                price={it.price}
-                rating={it.rating}
-                slug={it.slug}
-                category={it.category}
-              />
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* -------------------------------------------------- */}
       {/* CTA — ANIMATED */}

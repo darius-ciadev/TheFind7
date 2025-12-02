@@ -1,83 +1,74 @@
 import { useState, useEffect } from "react";
 
-// Define the types for each piece of state
+export type PriceFilter = "budget" | "mid" | "premium" | null;
+
 interface SearchState {
   q: string;
-  category: string | null;
-  priceRange: [number, number] | null;
+  collection: string | null;     // curated group
+  price: PriceFilter;             // budget/mid/premium
   sort: string;
-  tier: string | null;
+  tier: string[];                 // MULTI SELECT
 }
 
 export default function useSearchState() {
   const [q, setQ] = useState<string>("");
-  const [category, setCategory] = useState<string | null>(null);
-  const [priceRange, setPriceRange] = useState<[number, number] | null>(null);
+  const [collection, setCollection] = useState<string | null>(null);
+  const [price, setPrice] = useState<PriceFilter>(null);
   const [sort, setSort] = useState<string>("relevance");
-  const [tier, setTier] = useState<string | null>(null); // New state for tier
+  const [tier, setTier] = useState<string[]>([]); // <-- FIXED
 
   // ------------------------------------------------------
-  // URL SYNC
+  // WRITE FILTERS → URL
   // ------------------------------------------------------
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
+    const params = new URLSearchParams();
 
     if (q) params.set("q", q);
-    else params.delete("q");
-
-    if (category) params.set("category", category);
-    else params.delete("category");
-
+    if (collection) params.set("collection", collection);
+    if (price) params.set("price", price);
     if (sort) params.set("sort", sort);
-    else params.delete("sort");
-
-    if (priceRange) params.set("price", `${priceRange[0]}-${priceRange[1]}`);
-    else params.delete("price");
-
-    if (tier) params.set("tier", tier);
-    else params.delete("tier");
+    if (tier.length > 0) params.set("tier", tier.join(",")); // multi
 
     const url = `${window.location.pathname}?${params.toString()}`;
     window.history.replaceState({}, "", url);
-  }, [q, category, sort, priceRange, tier]); // Make sure to include 'tier'
+  }, [q, collection, price, sort, tier]);
 
   // ------------------------------------------------------
-  // INITIAL LOAD FROM URL
+  // READ FROM URL → filter state
   // ------------------------------------------------------
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
 
     const q0 = params.get("q") ?? "";
-    const category0 = params.get("category");
+    const col0 = params.get("collection") ?? null;
+
+    const price0 = params.get("price") as PriceFilter | null;
+
     const sort0 = params.get("sort") ?? "relevance";
-    const p = params.get("price");
-    const tier0 = params.get("tier"); // Added handling for 'tier' param
+
+    const tierStr = params.get("tier");
+    const tier0 = tierStr ? tierStr.split(",") : [];
 
     setQ(q0);
+    setCollection(col0);
+    setPrice(price0);
     setSort(sort0);
-
-    if (category0) setCategory(category0);
-    if (tier0) setTier(tier0); // Set 'tier' state
-
-    if (p) {
-      const [a, b] = p.split("-").map(Number);
-      if (!Number.isNaN(a) && !Number.isNaN(b)) setPriceRange([a, b]);
-    }
+    setTier(tier0);
   }, []);
 
   // ------------------------------------------------------
-  // RETURN FULL SEARCH STATE
+  // Return everything
   // ------------------------------------------------------
   return {
     q,
     setQ,
-    category,
-    setCategory,
-    priceRange,
-    setPriceRange,
+    collection,
+    setCollection,
+    price,
+    setPrice,
     sort,
     setSort,
     tier,
-    setTier, // Include 'setTier' for updating tier state
+    setTier,
   };
 }

@@ -33,3 +33,17 @@ export const sortByPriceHighToLow = (items: Item[]): Item[] => {
 export const sortByRating = (items: Item[]): Item[] => {
   return [...items].sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0));
 };
+
+export function priceGroup(priceRaw?: string | number): "budget" | "mid" | "premium" | null {
+  if (!priceRaw) return null;
+
+  const p = typeof priceRaw === "string"
+    ? parseFloat(priceRaw.replace("$", ""))
+    : priceRaw;
+
+  if (isNaN(p)) return null;
+
+  if (p <= 50) return "budget";
+  if (p <= 150) return "mid";
+  return "premium";
+}

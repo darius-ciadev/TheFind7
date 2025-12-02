@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/router";
 import { searchItems } from "@/utils/searchEngine";
 import SearchSuggestions from "./SearchSuggestions";
-import { Item } from "@/utils/searchEngine";
+import { Item } from "@/data/items";
 
 interface SearchBarProps {
   open: boolean;       

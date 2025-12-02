@@ -1,30 +1,16 @@
 // ------------------------------------------------------
-// Search Engine v3 — Clean + Fuzzy + Weighted
+// Search Engine v4 — Collections + Filters + Fuzzy Search
 // ------------------------------------------------------
 
-import { items as rawItems } from "@/data/items";
+import { Item, items as ALL_ITEMS } from "@/data/items";
+import { collectionsMap } from "@/data/getCollection";
 
-export type Item = {
-  slug: string;
-  title: string;
-  category: string;
-  subtitle?: string;
-  image?: string;
-  price?: string;
-  rating?: number;
-  description?: string;
-  tier?: string;
-  [k: string]: any;
-};
-
-const items: Item[] = Array.isArray(rawItems) ? rawItems : [];
-
-// Safe lowercase helper
+// Helper: safe lowercase
 const low = (v: any) =>
   v === undefined || v === null ? "" : String(v).toLowerCase();
 
 // ------------------------------------------------------
-// Levenshtein distance (fuzzy match)
+// FUZZY: Levenshtein distance
 // ------------------------------------------------------
 function fuzzyDistance(a: string, b: string): number {
   if (!a || !b) return 999;
@@ -48,7 +34,7 @@ function fuzzyDistance(a: string, b: string): number {
 }
 
 // ------------------------------------------------------
-// Compute weighted score for a single item
+// WEIGHTED SCORE
 // ------------------------------------------------------
 function computeScore(item: Item, q: string): number {
   const t = low(item.title);
@@ -58,52 +44,112 @@ function computeScore(item: Item, q: string): number {
 
   let score = 0;
 
-  // --- Strong matches ---
-  if (t.startsWith(q)) score += 50;
+  if (t.startsWith(q)) score += 60;
   if (t.includes(q)) score += 35;
 
-  // --- Medium matches ---
   if (c.includes(q)) score += 20;
   if (s.includes(q)) score += 15;
   if (d.includes(q)) score += 8;
 
-  // --- Fuzzy match / typo tolerance ---
   const dist = fuzzyDistance(t, q);
   if (dist <= 1) score += 20;
   else if (dist <= 2) score += 10;
 
-  // --- Short titles slightly boosted ---
   score += Math.max(0, 10 - t.length / 5);
 
-  // --- Rating score ---
   if (item.rating) score += item.rating * 2;
 
   return score;
 }
 
 // ------------------------------------------------------
-// MAIN SEARCH FUNCTION WITH FILTERS
+// PARSE PRICE
 // ------------------------------------------------------
-export function searchItems(query: string): Item[] {
-  if (!query || typeof query !== "string") return [];
+export const parsePrice = (price?: string): number => {
+  if (!price) return 0;
+  return Number(price.replace(/[^0-9.]/g, ""));
+};
 
-  const q = query.toLowerCase().trim();
-  if (!q) return [];
+// ------------------------------------------------------
+// MAIN SEARCH ENGINE
+// ------------------------------------------------------
+export function runSearch({
+  query,
+  collection,
+  price,
+  tier,
+  sortBy,
+}: {
+  query?: string;
+  collection?: string | null;
+  price?: [number, number] | null;
+  tier?: string[] | null;
+  sortBy?: string | null;
+}): Item[] {
+  let results: Item[] = [];
 
-  const filteredItems = items
-    .map((item) => ({
-      ...item,
-      __score: computeScore(item, q),
-    }))
-    .filter((i) => i.__score > 0)
-    .sort((a, b) => b.__score - a.__score);
+  // 1. COLLECTION FILTER -----------------------------------------
+  if (collection) {
+    results = collectionsMap[collection] ?? [];
+  } else {
+    results = ALL_ITEMS;
+  }
 
-  return filteredItems;
+  // 2. TEXT SEARCH ------------------------------------------------
+  if (query && query.trim()) {
+    const q = query.toLowerCase().trim();
+
+    results = results
+      .map((item) => ({
+        ...item,
+        __score: computeScore(item, q),
+      }))
+      .filter((i) => i.__score > 0)
+      .sort((a, b) => b.__score - a.__score);
+  }
+
+  // 3. PRICE FILTER ----------------------------------------------
+  if (price) {
+    const [min, max] = price;
+
+    results = results.filter((item) => {
+      const value = parsePrice(item.price);
+      return value >= min && value <= max;
+    });
+  }
+
+  // 4. TIER FILTER (multi-select) --------------------------------
+  if (tier && tier.length > 0) {
+    results = results.filter((item) => tier.includes(item.tier ?? ""));
+  }
+
+  // 5. SORTING ----------------------------------------------------
+  if (sortBy === "rating") {
+    results = results.sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0));
+  }
+  if (sortBy === "price_low") {
+    results = results.sort(
+      (a, b) => parsePrice(a.price) - parsePrice(b.price)
+    );
+  }
+  if (sortBy === "price_high") {
+    results = results.sort(
+      (a, b) => parsePrice(b.price) - parsePrice(a.price)
+    );
+  }
+
+  return results;
 }
 
-export { items };
-
-export function filterByTier(items: Item[], tier: string | null): Item[] {
-  if (!tier) return items;
-  return items.filter((item) => item.tier === tier);
+// ------------------------------------------------------
+// Lightweight text-only search for suggestions
+// ------------------------------------------------------
+export function searchItems(query: string): Item[] {
+  return runSearch({
+    query,
+    collection: null,
+    price: null,
+    tier: null,
+    sortBy: "relevance",
+  });
 }

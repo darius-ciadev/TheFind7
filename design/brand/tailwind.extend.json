@@ -1,0 +1,29 @@
+{
+  "theme": {
+    "extend": {
+      "colors": {
+        "find7": {
+          "primary": "#212F54",
+          "bg": "#F3F0ED",
+          "accent": "#00FFAE",
+          "neutral": "#6F7689"
+        }
+      },
+      "borderRadius": {
+        "find7": "12px"
+      },
+      "fontFamily": {
+        "sans": [
+          "Inter",
+          "system-ui",
+          "-apple-system",
+          "Segoe UI",
+          "Roboto",
+          "Helvetica",
+          "Arial",
+          "sans-serif"
+        ]
+      }
+    }
+  }
+}

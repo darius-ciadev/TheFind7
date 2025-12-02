@@ -1,5 +1,15 @@
 import { TierMap } from "./tierMap";
 
+export const curatedCategories = [
+  { key: "best_overall", label: "Best Overall" },
+  { key: "best_value", label: "Best Value" },
+  { key: "best_premium", label: "Best Premium" },
+  { key: "best_kids", label: "Best for Kids" },
+  { key: "best_eco", label: "Best Eco Choice" },
+  { key: "best_cool", label: "Cool Kids' Choice" },
+  { key: "best_utility", label: "Best Utility Pick" },
+];
+
 // src/data/items.ts
 // ------------------------------------------------------
 // REAL PRODUCT DATA FOR THE FIND 7
@@ -553,6 +563,16 @@ const best_utility: Item[] = [
     createdAt: '2025-12-01'
   },
 ];
+
+export {
+  best_overall,
+  best_value,
+  best_premium,
+  best_kids,
+  best_eco,
+  cool_kids,
+  best_utility,
+};
 
 export const items: Item[] = [
   ...best_overall,

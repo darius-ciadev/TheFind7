@@ -27,7 +27,7 @@ export default function ValueProps() {
   ];
 
   return (
-    <section className="w-full py-28 bg-white">
+    <section id="value" className="w-full py-28 bg-white">
       <div className="max-w-7xl mx-auto px-6 md:px-12">
         {/* Centered heading (premium touch) */}
         <motion.h2

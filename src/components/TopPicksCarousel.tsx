@@ -3,6 +3,7 @@
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
 import { useEffect, useState, useCallback } from "react";
+import { motion } from "framer-motion";
 import ItemCard from "@/components/ItemCard";
 
 interface TopPicksCarouselProps<T> {
@@ -15,7 +16,6 @@ export default function TopPicksCarousel<T>({ items }: TopPicksCarouselProps<T>)
       align: "start",
       loop: false,
       dragFree: true,
-      skipSnaps: false,
     },
     [
       Autoplay({
@@ -36,7 +36,6 @@ export default function TopPicksCarousel<T>({ items }: TopPicksCarouselProps<T>)
 
   useEffect(() => {
     if (!embla) return;
-
     setScrollSnaps(embla.scrollSnapList());
     embla.on("select", onSelect);
     onSelect();
@@ -45,81 +44,90 @@ export default function TopPicksCarousel<T>({ items }: TopPicksCarouselProps<T>)
   return (
     <div className="relative w-full">
 
-      {/* Left Fade */}
-      <div className="pointer-events-none absolute inset-y-0 left-0 w-24 
-        bg-gradient-to-r from-white/95 to-transparent z-20" />
+      {/* ========================================== */}
+      {/* MOBILE CAROUSEL — Enhanced                */}
+      {/* ========================================== */}
+      <div className="block md:hidden relative">
 
-      {/* Right Fade */}
-      <div className="pointer-events-none absolute inset-y-0 right-0 w-24 
-        bg-gradient-to-l from-white/95 to-transparent z-20" />
+        {/* LEFT FADE */}
+        <div className="pointer-events-none absolute inset-y-0 left-0 w-20 bg-gradient-to-r from-white to-transparent z-20" />
 
-      {/* Embla Viewport */}
-      <div ref={emblaRef} className="overflow-hidden">
-        <div className="flex gap-6 py-4 px-1">
-          {items.map((item: any, index: number) => (
-            <div
-              key={item.slug}
-              className="
-                flex-[0_0_90%]
-                sm:flex-[0_0_48%]
-                lg:flex-[0_0_32%]
-                xl:flex-[0_0_25%]
-                transition-transform duration-300
-                hover:-translate-y-1
-              "
-            >
-              <ItemCard
-                rank={index + 1}
-                title={item.title}
-                subtitle={item.subtitle}
-                image={item.image}
-                price={item.price}
-                rating={item.rating}
-                slug={item.slug}
-                category={item.category}
-              />
-            </div>
+        {/* RIGHT FADE */}
+        <div className="pointer-events-none absolute inset-y-0 right-0 w-20 bg-gradient-to-l from-white to-transparent z-20" />
+
+        {/* EMBLA VIEWPORT */}
+        <div ref={emblaRef} className="overflow-hidden">
+          <div className="flex gap-5 py-4 pl-2 pr-8">
+            {items.map((item: any, index: number) => (
+              <motion.div
+                key={item.slug}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: index * 0.1 }}
+                className="flex-[0_0_85%] sm:flex-[0_0_70%]"
+              >
+                <ItemCard {...item} rank={index + 1} />
+              </motion.div>
+            ))}
+          </div>
+        </div>
+
+        {/* ARROWS */}
+        <button
+          onClick={() => embla?.scrollPrev()}
+          className="absolute left-2 top-1/2 -translate-y-1/2 z-30 
+          bg-white/90 backdrop-blur-sm p-3 rounded-full shadow-lg 
+          hover:shadow-xl hover:scale-110 transition"
+        >
+          ‹
+        </button>
+
+        <button
+          onClick={() => embla?.scrollNext()}
+          className="absolute right-2 top-1/2 -translate-y-1/2 z-30 
+          bg-white/90 backdrop-blur-sm p-3 rounded-full shadow-lg 
+          hover:shadow-xl hover:scale-110 transition"
+        >
+          ›
+        </button>
+
+        {/* PAGINATION */}
+        <div className="flex justify-center mt-4 gap-2">
+          {scrollSnaps.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => embla?.scrollTo(i)}
+              className={`w-2.5 h-2.5 rounded-full transition 
+                ${i === selectedIndex ? "bg-[var(--green)] scale-[1.45]" : "bg-gray-300"}`}
+            />
           ))}
         </div>
       </div>
 
-      {/* Arrow Buttons */}
-      <button
-        onClick={() => embla?.scrollPrev()}
-        className="
-          absolute left-3 top-1/2 -translate-y-1/2 z-30 
-          bg-white p-3 rounded-full shadow-lg 
-          hover:shadow-xl hover:scale-110 transition
-        "
-      >
-        <span className="text-xl leading-none">‹</span>
-      </button>
+      {/* ========================================== */}
+      {/* DESKTOP GRID — PREMIUM UPGRADE            */}
+      {/* ========================================== */}
+      <div className="hidden md:grid grid-cols-2 lg:grid-cols-3 gap-8 pt-4">
 
-      <button
-        onClick={() => embla?.scrollNext()}
-        className="
-          absolute right-3 top-1/2 -translate-y-1/2 z-30 
-          bg-white p-3 rounded-full shadow-lg 
-          hover:shadow-xl hover:scale-110 transition
-        "
-      >
-        <span className="text-xl leading-none">›</span>
-      </button>
-
-      {/* Pagination */}
-      <div className="flex justify-center mt-5 gap-2">
-        {scrollSnaps.map((_, i) => (
-          <button
-            key={i}
-            onClick={() => embla?.scrollTo(i)}
-            className={`
-              w-3 h-3 rounded-full transition 
-              ${i === selectedIndex 
-                ? "bg-[var(--green)] scale-125" 
-                : "bg-gray-300 hover:bg-gray-400"}
-            `}
-          />
+        {items.map((item: any, index: number) => (
+          <motion.div
+            key={item.slug}
+            initial={{ opacity: 0, y: 26 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.55, delay: index * 0.12 }}
+            className="
+              transition-all 
+              hover:-translate-y-2 
+              hover:shadow-[0_12px_32px_rgba(0,0,0,0.08)]
+              rounded-2xl
+            "
+          >
+            <ItemCard {...item} rank={index + 1} />
+          </motion.div>
         ))}
+
       </div>
     </div>
   );

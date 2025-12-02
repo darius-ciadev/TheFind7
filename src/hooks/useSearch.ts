@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { searchItems } from "@/utils/searchEngine";
-import { Item } from "@/utils/searchEngine";
+import { Item } from "@/data/items";
 
 export function useSearch(query: string) {
   const [results, setResults] = useState<Item[]>([]);

@@ -22,6 +22,7 @@ import { itemUrl } from "@/utils/urls";
 import { devPlaceholder } from "@/utils/devPlaceholder";
 import { SearchProvider } from "@/context/SearchContext";
 import { getTier } from "@/lib/getTier";
+import { priceGroup } from "@/utils/sorting";
 
 // ------------------------------
 // Highlight Helper (keeps your original)
@@ -42,6 +43,17 @@ function CardSkeleton() {
     </div>
   );
 }
+
+function formatCategory(str: string) {
+  return str.replace(/_/g, " ").replace(/\b\w/g, (s) => s.toUpperCase());
+}
+
+type Filters = {
+  tier: string[];
+  price: [number, number] | null;
+  collection: string | null;
+  sortBy: string;
+};
 
 // ------------------------------
 // Main Search Page (V3 UI)
@@ -68,12 +80,23 @@ export default function SearchPage() {
   const [loading, setLoading] = useState<boolean>(false);
 
   // filters object expected by SearchFilters in your current project
-  const [filters, setFilters] = useState<any>({
-    category: null,
-    price: null,
+  const [filters, setFilters] = useState<Filters>({
+    collection: null,
+    price: [0, 9999],
     sortBy: "relevance",
     tier: [],
   });
+
+  const collectionParam = searchParams.get("collection");
+
+  useEffect(() => {
+    if (collectionParam) {
+      setFilters((prev: any) => ({
+        ...prev,
+        collection: collectionParam,
+      }));
+    }
+  }, [collectionParam]);
 
   useEffect(() => {
     const params = new URLSearchParams(searchParams.toString());
@@ -98,17 +121,17 @@ export default function SearchPage() {
 
   const toggleTier = (tier: string) => {
     setFilters((prev: any) => {
-      const exists = prev.tier.includes(tier);
+      const current = Array.isArray(prev.tier) ? prev.tier : [];
+
+      const exists = current.includes(tier);
 
       return {
         ...prev,
         tier: exists
-          ? prev.tier.filter((t: string) => t !== tier)
-          : [...prev.tier, tier], // add
+          ? current.filter((t: string) => t !== tier)
+          : [...current, tier],
       };
     });
-
-    setPage(1);
   };
 
   // Debounce the live search to avoid extremely frequent router changes
@@ -169,29 +192,20 @@ export default function SearchPage() {
 
   const clearAll = useCallback(() => {
     setFilters({
-      category: null,
-      price: null,
+      collection: null,
+      price: [0, 9999],
       sortBy: "relevance",
+      tier: [],
     });
     setPage(1);
   }, []);
-
-  // price group helper (keeps your original)
-  function priceGroup(priceStr: string) {
-    if (!priceStr) return null;
-    const p = parseFloat(priceStr.replace(/[^0-9.]/g, ""));
-    if (p < 70) return "budget";
-    if (p < 150) return "mid";
-    return "premium";
-  }
 
   // Apply filters + sorting (memoized)
   const filtered = useMemo(() => {
     let arr = [...allResults];
 
-    // Category
-    if (filters.category) {
-      arr = arr.filter((i) => i.category === filters.category);
+    if (filters.collection) {
+      arr = arr.filter((i) => i.category === filters.collection);
     }
 
     // Price
@@ -262,7 +276,7 @@ export default function SearchPage() {
   // when filters change from child SearchFilters, reset page
   useEffect(() => {
     setPage(1);
-  }, [filters.category, filters.price, filters.sortBy]);
+  }, [filters.collection, filters.price, filters.sortBy]);
 
   // -------------------- RENDER --------------------
   return (
@@ -349,7 +363,7 @@ export default function SearchPage() {
               <div className="flex-1 min-w-[200px]">
                 <FilterPills
                   query={query}
-                  category={filters.category}
+                  category={filters.collection}
                   priceRange={filters.price}
                   onClear={(key) => {
                     if (key === "q") setQuery("");
@@ -393,7 +407,7 @@ export default function SearchPage() {
 
                 <div className="flex justify-center gap-3 flex-wrap">
                   {/* → Suggest clearing 1 filter at a time */}
-                  {filters.category && (
+                  {filters.collection && (
                     <button
                       className="px-3 py-1 rounded-full border hover:bg-gray-100 transition"
                       onClick={() => clearOne("category")}
@@ -487,10 +501,11 @@ export default function SearchPage() {
                         <Link
                           href={itemUrl(item.category, item.slug)}
                           className="block rounded-xl border p-4 bg-white 
-                          hover:shadow-xl hover:-translate-y-1 
-                          transition-all duration-300 group"
+    hover:shadow-xl hover:-translate-y-1 
+    transition-all duration-300 group relative overflow-hidden"
                         >
-                          <div className="w-full aspect-[4/3] rounded-lg overflow-hidden bg-gray-200">
+                          {/* Image */}
+                          <div className="w-full aspect-[4/3] rounded-lg overflow-hidden bg-gray-200 shadow-sm">
                             <Image
                               src={devPlaceholder(item.image)}
                               alt={item.title}
@@ -500,8 +515,9 @@ export default function SearchPage() {
                             />
                           </div>
 
+                          {/* Title */}
                           <h3
-                            className="mt-3 font-semibold text-base md:text-lg line-clamp-2 group-hover:text-[var(--green)]"
+                            className="mt-3 font-semibold text-base md:text-lg line-clamp-2 group-hover:text-[var(--green)] transition-colors"
                             dangerouslySetInnerHTML={{
                               __html: highlight(
                                 item.title,
@@ -510,29 +526,38 @@ export default function SearchPage() {
                             }}
                           />
 
+                          {/* Description */}
+                          <p className="mt-1 text-sm text-gray-600 line-clamp-2">
+                            {item.subtitle}
+                          </p>
+
+                          {/* Divider */}
+                          <div className="w-full h-[1px] bg-gray-100 my-3" />
+
+                          {/* Tier Badge */}
                           {tier && (
                             <span
                               className={`
-                                    inline-flex items-center gap-1 px-3 py-1 mt-2 rounded-md text-sm font-bold 
-                                    uppercase tracking-wide transition-all select-none
-                                    ${
-                                      tier === "S" &&
-                                      "bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-[0_0_20px_rgba(193,88,255,0.95)]"
-                                    }
-                                    ${
-                                      tier === "A" &&
-                                      "bg-gradient-to-r from-orange-500 to-red-500 text-white shadow-[0_0_14px_rgba(255,60,60,0.8)]"
-                                    }
-                                    ${
-                                      tier === "B" &&
-                                      "bg-gradient-to-r from-yellow-300 to-amber-300 text-black shadow-[0_0_10px_rgba(255,234,50,0.75)]"
-                                    }
-                                    ${
-                                      tier === "C" &&
-                                      "bg-gradient-to-r from-gray-200 to-gray-300 text-gray-800 shadow-sm"
-                                    }
-                                    hover:scale-[1.07]
-                                  `}
+        inline-flex items-center gap-1 px-3 py-1 rounded-md text-sm font-bold 
+        uppercase tracking-wide transition-all select-none shadow-sm
+        ${
+          tier === "S" &&
+          "bg-gradient-to-r from-purple-500 to-pink-500 text-white"
+        }
+        ${
+          tier === "A" &&
+          "bg-gradient-to-r from-orange-500 to-red-500 text-white"
+        }
+        ${
+          tier === "B" &&
+          "bg-gradient-to-r from-yellow-300 to-amber-300 text-black"
+        }
+        ${
+          tier === "C" &&
+          "bg-gradient-to-r from-gray-200 to-gray-300 text-gray-800"
+        }
+        group-hover:scale-[1.08]
+      `}
                               title={`This item is ranked Tier ${tier}`}
                             >
                               <span className="text-base">
@@ -542,9 +567,29 @@ export default function SearchPage() {
                             </span>
                           )}
 
-                          <p className="mt-1 text-sm opacity-70 capitalize">
-                            {item.category}
-                          </p>
+                          {/* Rating + Price */}
+                          <div className="flex items-center justify-between mt-3">
+                            <div className="flex items-center gap-1 text-sm text-gray-700">
+                              ⭐{" "}
+                              <span className="text-[13px] font-medium">
+                                {item.rating}
+                              </span>
+                            </div>
+
+                            <span className="text-sm font-semibold">
+                              {item.price}
+                            </span>
+                          </div>
+
+                          {/* Category Label */}
+                          <div
+                            className="
+    mt-2 text-xs font-medium text-[var(--green)]
+    bg-[rgba(0,200,100,0.06)] px-2 py-1 rounded-full w-fit
+  "
+                          >
+                            {formatCategory(item.category)}
+                          </div>
                         </Link>
                       </motion.div>
                     );

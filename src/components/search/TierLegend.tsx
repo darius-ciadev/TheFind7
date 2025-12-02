@@ -1,7 +1,6 @@
 "use client";
 
 import { getTierIcon } from "@/lib/tierIcons";
-import { Star, Flame, BadgeDollarSign, Backpack } from "lucide-react";
 
 export default function TierLegend({
   selectedTiers = [],
@@ -35,10 +34,8 @@ export default function TierLegend({
           >
             {getTierIcon("S")}
           </span>
-          <div className="flex items-center gap-1.5 text-gray-800">
-            <Star size={14} className="text-purple-600" />
-            <span>S — Premium Pick</span>
-          </div>
+
+          <span className="text-gray-800">S — Premium Pick</span>
         </button>
 
         {/* A Tier */}
@@ -59,10 +56,8 @@ export default function TierLegend({
           >
             {getTierIcon("A")}
           </span>
-          <div className="flex items-center gap-1.5 text-gray-800">
-            <Flame size={14} className="text-red-500" />
-            <span>A — Best Overall</span>
-          </div>
+
+          <span className="text-gray-800">A — High Quality</span>
         </button>
 
         {/* B Tier */}
@@ -83,10 +78,8 @@ export default function TierLegend({
           >
             {getTierIcon("B")}
           </span>
-          <div className="flex items-center gap-1.5 text-gray-800">
-            <BadgeDollarSign size={14} className="text-yellow-500" />
-            <span>B — Best Value</span>
-          </div>
+
+          <span className="text-gray-800">B — Value Tier</span>
         </button>
 
         {/* C Tier */}
@@ -106,10 +99,8 @@ export default function TierLegend({
           >
             {getTierIcon("C")}
           </span>
-          <div className="flex items-center gap-1.5 text-gray-800">
-            <Backpack size={14} className="text-gray-600" />
-            <span>C — Entry / Basic</span>
-          </div>
+
+          <span className="text-gray-800">C — Entry Tier</span>
         </button>
       </div>
     </div>

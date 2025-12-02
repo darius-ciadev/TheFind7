@@ -5,7 +5,7 @@ import Link from "next/link";
 
 export default function Hero() {
   return (
-    <section className="w-full bg-gradient-to-b from-white via-neutral-50 to-white">
+    <section id="hero" className="w-full bg-gradient-to-b from-white via-neutral-50 to-white">
       <div
         className="
           max-w-7xl mx-auto
