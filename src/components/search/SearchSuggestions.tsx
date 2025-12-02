@@ -6,8 +6,7 @@ import Link from "next/link";
 import { devPlaceholder } from "@/utils/devPlaceholder";
 import { itemUrl } from "@/utils/urls"; 
 import { useRouter } from "next/router";
-import { Item } from "@/utils/searchEngine";
-
+import { Item } from "@/data/items";
 interface SearchSuggestionsProps {
   items: Item[]; // Array of items
   query: string;        // Search query string
