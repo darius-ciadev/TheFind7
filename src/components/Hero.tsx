@@ -5,7 +5,7 @@ import Link from "next/link";
 
 export default function Hero() {
   return (
-    <section id="hero" className="w-full bg-gradient-to-b from-white via-neutral-50 to-white">
+    <section id="hero" className="w-full bg-[var(--find7-color-bg)]">
       <div
         className="
           max-w-7xl mx-auto
@@ -19,7 +19,7 @@ export default function Hero() {
         <div className="space-y-6">
           <h1
             className="
-              font-extrabold text-gray-900
+              font-extrabold var(--primary)
               text-5xl md:text-6xl lg:text-7xl
               leading-[1.05]
             "
@@ -31,7 +31,7 @@ export default function Hero() {
 
           <p
             className="
-              text-lg md:text-xl text-neutral-600
+              text-lg md:text-xl text-[var(--find7-color-neutral)]
               max-w-xl
             "
           >

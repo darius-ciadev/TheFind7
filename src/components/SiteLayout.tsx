@@ -12,7 +12,7 @@ export default function SiteLayout({ children }: SiteLayoutProps) {
   const [searchOpen, setSearchOpen] = useState(false);
 
   return (
-    <div className="min-h-screen flex flex-col bg-background text-body">
+    <div className="min-h-screen flex flex-col bg-[var(--find7-color-bg)] text-body">
       {/* Header */}
       <Header setSearchOpen={setSearchOpen} />
 

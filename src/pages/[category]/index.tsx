@@ -49,7 +49,7 @@ function buildItemListJsonLd(categoryUrl: string, items: Item[]) {
 /* Skeleton */
 function SkeletonCard() {
   return (
-    <div className="rounded-xl border bg-white p-4 animate-pulse shadow-[0_3px_10px_rgba(0,0,0,0.04)]">
+    <div className="rounded-xl border">
       <div className="bg-gray-200 h-44 rounded-md mb-4" />
       <div className="h-4 bg-gray-200 rounded w-3/4 mb-2" />
       <div className="h-3 bg-gray-200 rounded w-1/2" />
@@ -60,7 +60,7 @@ function SkeletonCard() {
 /* Empty State */
 function EmptyState({ onReset }: { onReset: () => void }) {
   return (
-    <div className="w-full rounded-xl border bg-white p-8 text-center shadow-[0_4px_12px_rgba(0,0,0,0.05)]">
+    <div className="w-full rounded-xl border">
       <h3 className="text-xl font-semibold mb-2">No results found</h3>
       <p className="text-sm text-neutral-600 mb-4">
         Try removing filters or reset to see all curated picks.
@@ -361,7 +361,7 @@ export default function CategoryPage({ category, categoryItems }: Props) {
 
         {/* Filters */}
         <div ref={filtersRef} className="mb-6">
-          <div className="sticky top-20 z-30 bg-white/95 backdrop-blur-md shadow-[0_3px_12px_rgba(0,0,0,0.06)]">
+          <div className="sticky top-20 z-30">
             <div className="max-w-7xl mx-auto px-6 space-y-4 py-2">
               <SmartFilters
                 items={categoryItems}

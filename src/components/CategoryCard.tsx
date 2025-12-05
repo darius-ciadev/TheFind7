@@ -47,7 +47,7 @@ export default function CategoryCard({
         <div className="flex flex-col flex-1">
           <h3
             className="
-              text-lg font-semibold text-gray-900
+              text-lg font-semibold text-[var(--find7-color-primary)]
               tracking-tight
               group-hover:text-[var(--green)]
               transition-colors
@@ -58,7 +58,7 @@ export default function CategoryCard({
 
           <p
             className="
-              text-sm text-neutral-600 mt-1.5 leading-snug
+              text-sm text-[var(--find7-color-neutral)] mt-1.5 leading-snug
               line-clamp-2
             "
           >

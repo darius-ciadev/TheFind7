@@ -37,7 +37,7 @@ function NavLink({
       className={`transition px-1 pb-1 border-b-2 ${
         isActive
           ? "border-[var(--green)] text-[var(--green)]"
-          : "border-transparent hover:border-[var(--green)] hover:text-[var(--green-dark)]"
+          : "border-transparent var(--find7-color-primary) hover:border-[var(--green)] hover:text-[var(--green-dark)]"
       }`}
     >
       {children}
@@ -97,13 +97,13 @@ export default function Header({
   }, [pathname]);
 
   return (
-    <header className="w-full border-b bg-white sticky top-0 z-50 shadow-sm">
+    <header className="w-full border-b sticky top-0 bg-[var(--find7-color-bg)] z-50 shadow-sm">
       <div className="max-w-6xl mx-auto flex items-center justify-between px-6 h-20">
 
         {/* LOGO */}
         <Link href="/" className="flex items-center gap-3">
           <Image src={logoUrl} alt="The Find 7" width={42} height={42} priority />
-          <span className="text-2xl font-extrabold tracking-tight text-[var(--green)]">
+          <span className="text-2xl font-extrabold tracking-tight text-[var(--find7-color-primary)]">
             The Find 7
           </span>
         </Link>
@@ -126,18 +126,18 @@ export default function Header({
           {/* Search */}
           <button
             onClick={() => setSearchOpen?.(true)}
-            className="hover:text-[var(--green-dark)] text-[var(--green)] transition"
+            className="hover:text-[var(--green-dark)] text-[var(--find7-color-primary)] transition"
           >
             <MagnifyingGlassIcon className="w-6 h-6" />
           </button>
 
           {/* Profile */}
-          <button className="hover:text-[var(--green-dark)] text-[var(--green)] transition">
+          <button className="hover:text-[var(--green-dark)] text-[var(--find7-color-primary)] transition">
             <UserIcon className="w-6 h-6" />
           </button>
 
           {/* Cart */}
-          <button className="relative hover:text-[var(--green-dark)] text-[var(--green)] transition">
+          <button className="relative hover:text-[var(--green-dark)] text-[var(--find7-color-primary)] transition">
             <ShoppingCartIcon className="w-6 h-6" />
             <span className="absolute -top-2 -right-2 bg-[var(--green)] text-white text-xs px-1.5 py-0.5 rounded-full">
               0

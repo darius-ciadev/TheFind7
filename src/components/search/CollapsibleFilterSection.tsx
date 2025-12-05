@@ -12,7 +12,7 @@ export function CollapsibleFilterSection({
 }) {
   const [open, setOpen] = useState(defaultOpen);
   return (
-    <div className="mb-4 border rounded-lg overflow-hidden">
+    <div className="mb-4 border rounded-lg bg-white overflow-hidden">
       <button
         onClick={() => setOpen((o) => !o)}
         className="w-full flex items-center justify-between px-4 py-3"

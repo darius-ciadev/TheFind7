@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
+
 /* TAILWIND DIRECTIVES — REQUIRED */
 @tailwind base;
 @tailwind components;
@@ -7,10 +9,16 @@
 :root {
   --green: #009B75;
   --green-dark: #007d5f;
-  --neutral: #666;
+  --neutral: #6F7689;
   --brand-border: #e5e5e5;
   --shadow-sm: 0 2px 6px rgba(0,0,0,0.06);
   --shadow-md: 0 4px 14px rgba(0,0,0,0.12);
+  --find7-color-primary:#212F54;
+  --find7-color-bg:#F3F0ED;
+  --find7-color-accent:#00FFAE;
+  --find7-color-neutral:#6F7689;
+  --find7-radius:12px;
+  --find7-font-sans:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
 }
 
 /* RESET */
@@ -22,9 +30,9 @@
 
 html, body {
   scroll-behavior: smooth;
-  font-family: "Inter", system-ui, sans-serif;
-  background: #ffffff;
-  color: #000000;
+  font-family: var(--find7-font-sans);
+  background: var(--find7-color-bg);
+  color: var(--find7-color-primary);
   -webkit-font-smoothing: antialiased;
   line-height: 1.6;
 }
@@ -93,7 +101,7 @@ a {
   position: sticky;
   left: 0;
   background: white;
-  z-index: 20; /* keeps it above the other cells */
+  z-index: 20; 
   border-right: 1px solid var(--brand-border);
 }
 
@@ -122,12 +130,12 @@ a {
 
 @keyframes highlight-medium {
   from { background-color: transparent; }
-  to { background-color: rgb(187 247 208); } /* light green */
+  to { background-color: var(--find7-color-accent); } /* light green */
 }
 
 @keyframes highlight-fuzzy {
   from { text-decoration-color: transparent; }
-  to { text-decoration-color: rgb(74 222 128); } /* green-400 */
+  to { text-decoration-color: var(--green); } /* green-400 */
 }
 
 .animate-highlight-strong {
@@ -173,14 +181,14 @@ a {
 }
 
 mark {
-  background: #bbf7d0;
-  color: #064e3b;
+  background: var(--find7-color-accent);
+  color: var(--green);
   font-weight: 600;
   padding: 0.15em 0.25em;
   border-radius: 3px;
 }
 
 mark:hover {
-  background: rgba(0, 155, 117, 0.28);
+  background: var(--green);
   transition: background 0.2s ease;
 }

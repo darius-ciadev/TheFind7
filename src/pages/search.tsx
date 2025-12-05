@@ -34,7 +34,7 @@ function highlight(text: string, q: string) {
 
 // ------------------------------
 // Skeleton card for loading polish
-function CardSkeleton() {
+const CardSkeleton = () => {
   return (
     <div className="rounded-xl border bg-white p-4 animate-pulse">
       <div className="w-full aspect-[4/3] bg-gray-200 rounded-lg" />
@@ -44,7 +44,7 @@ function CardSkeleton() {
   );
 }
 
-function formatCategory(str: string) {
+const formatCategory = (str: string) => {
   return str.replace(/_/g, " ").replace(/\b\w/g, (s) => s.toUpperCase());
 }
 
@@ -318,7 +318,7 @@ export default function SearchPage() {
                 className="absolute inset-0 bg-black/40"
                 onClick={() => setShowFiltersMobile(false)}
               />
-              <div className="absolute right-0 top-0 bottom-0 w-4/5 bg-white p-4 overflow-auto">
+              <div className="absolute right-0 top-0 bottom-0 w-4/5 p-4 overflow-auto">
                 <div className="flex items-center justify-between mb-3">
                   <h3 className="font-semibold">Filters</h3>
                   <button
@@ -517,7 +517,7 @@ export default function SearchPage() {
 
                           {/* Title */}
                           <h3
-                            className="mt-3 font-semibold text-base md:text-lg line-clamp-2 group-hover:text-[var(--green)] transition-colors"
+                            className="mt-3 font-semibold text-base md:text-lg line-clamp-2 text-[var(--find7-color-primary)] transition-colors"
                             dangerouslySetInnerHTML={{
                               __html: highlight(
                                 item.title,
@@ -527,7 +527,7 @@ export default function SearchPage() {
                           />
 
                           {/* Description */}
-                          <p className="mt-1 text-sm text-gray-600 line-clamp-2">
+                          <p className="mt-1 text-sm text-[var(--find7-color-neutral)] line-clamp-2">
                             {item.subtitle}
                           </p>
 

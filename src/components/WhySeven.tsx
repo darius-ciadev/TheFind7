@@ -37,7 +37,7 @@ export default function WhySeven() {
   ];
 
   return (
-    <section className="relative py-32 bg-white overflow-hidden">
+    <section className="relative py-32 overflow-hidden">
 
       {/* 🌟 Ambient Glow Behind Section */}
       <div
@@ -57,9 +57,9 @@ export default function WhySeven() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900"
+          className="text-center text-3xl md:text-4xl font-extrabold tracking-tight text-[--find7-color-neutral]"
         >
-          Why we choose <span className="text-[var(--green)]">7 picks</span>
+          Why we choose <span className="text-[--find7-color-primary]">7 Picks</span>
         </motion.h2>
 
         {/* Subtitle */}
@@ -68,7 +68,7 @@ export default function WhySeven() {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ delay: 0.2, duration: 0.6 }}
-          className="text-center text-neutral-600 max-w-2xl mx-auto mt-4"
+          className="text-center text-neutral-600 max-w-2xl mx-auto mt-4 text-[--find7-color-neutral]"
         >
           Decision science proves it: fewer options → smarter choices.  
           We analyze thousands of products so you only see the 7 that matter.
@@ -86,9 +86,9 @@ export default function WhySeven() {
               transition={{ duration: 0.6, delay: i * 0.15 }}
               className="
                 relative bg-white border rounded-2xl p-8 shadow-sm 
-                hover:shadow-[0_8px_32px_rgba(0,200,120,0.24)]
                 hover:-translate-y-2
                 transition-all duration-300 group cursor-default
+                hover:border-[var(--green)]
               "
             >
               {/* Icon Glow Aura */}
@@ -96,7 +96,7 @@ export default function WhySeven() {
                 className="
                   absolute -top-6 left-1/2 -translate-x-1/2 
                   w-20 h-20 opacity-0 group-hover:opacity-60
-                  bg-[radial-gradient(circle,rgba(0,255,174,0.45),transparent_70%)]
+                  bg-[radial-gradient(circle,var(--green),transparent_70%)]
                   blur-xl rounded-full transition-all duration-500
                 "
               />
@@ -106,11 +106,11 @@ export default function WhySeven() {
                 {f.icon}
               </div>
 
-              <h3 className="font-semibold text-lg text-gray-900 mb-2 relative z-10">
+              <h3 className="font-semibold text-lg text-[--find7-color-primary] mb-2 relative z-10">
                 {f.title}
               </h3>
 
-              <p className="text-neutral-600 text-sm leading-relaxed relative z-10">
+              <p className="text-[--find7-color-neutral] text-sm leading-relaxed relative z-10">
                 {f.desc}
               </p>
             </motion.div>
@@ -125,12 +125,12 @@ export default function WhySeven() {
           transition={{ delay: 0.2, duration: 0.6 }}
           className="mt-24 max-w-3xl mx-auto"
         >
-          <h4 className="text-center text-neutral-700 font-medium mb-6">
+          <h4 className="text-center text-[--find7-color-primary] font-medium mb-6">
             Our 7-point evaluation framework
           </h4>
 
           <div className="
-            grid grid-cols-2 sm:grid-cols-3 gap-4 text-sm text-neutral-600
+            grid grid-cols-2 sm:grid-cols-3 gap-4 text-sm text-[--find7-color-primary]
           ">
             {miniFramework.map((point, i) => (
               <motion.div
@@ -141,7 +141,7 @@ export default function WhySeven() {
                 transition={{ duration: 0.5, delay: 0.3 + i * 0.07 }}
                 className="flex items-center gap-2"
               >
-                <span className="text-[var(--green)] text-base drop-shadow-[0_0_6px_rgba(0,255,174,0.8)]">
+                <span className="text-[var(--green)] text-base drop-shadow-[0_0_6px_var(--green)]">
                   ✔
                 </span>
                 {point}

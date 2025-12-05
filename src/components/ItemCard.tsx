@@ -51,7 +51,7 @@ export default function ItemCard({
             relative bg-white rounded-xl border
             p-4 flex items-center gap-5
             transition-all duration-200
-            hover:shadow-[0_4px_16px_rgba(0,0,0,0.06)]
+            hover:border-[var(--green)]
             hover:-translate-y-[2px]
           "
         >
@@ -102,11 +102,11 @@ export default function ItemCard({
 
           {/* Content */}
           <div className="flex-1 min-w-0">
-            <h3 className="text-base font-semibold leading-tight mb-1 line-clamp-1">
+            <h3 className="text-base font-semibold leading-tight text-[var(--find7-color-primary)] mb-1 line-clamp-1">
               {title}
             </h3>
 
-            <p className="text-xs text-neutral-600 mb-2 line-clamp-2">
+            <p className="text-xs text-[var(--find7-color-neutral)] mb-2 line-clamp-2">
               {subtitle}
             </p>
 
@@ -194,13 +194,11 @@ export default function ItemCard({
           />
         </div>
 
-        {/* Title */}
-        <h3 className="text-base font-semibold leading-tight mb-1">
+        <h3 className="text-base font-semibold leading-tight text-[var(--find7-color-primary)] mb-1 line-clamp-1">
           {title}
         </h3>
 
-        {/* Subtitle */}
-        <p className="text-xs text-neutral-600 mb-3 line-clamp-2">
+        <p className="text-xs text-[var(--find7-color-neutral)] mb-2 line-clamp-2">
           {subtitle}
         </p>
 

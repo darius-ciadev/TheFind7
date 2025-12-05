@@ -15,7 +15,7 @@ export default function FilterPills({
   onClearAll: () => void;
 }) {
   return (
-    <div className="sticky top-2 z-20 bg-white/80 backdrop-blur-sm pb-3">
+    <div className="sticky top-2 z-20 backdrop-blur-sm pb-3">
       <div className="flex flex-wrap gap-3 items-center px-1">
 
         <AnimatePresence>

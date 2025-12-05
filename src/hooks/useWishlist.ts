@@ -1,10 +1,15 @@
-// useWishlist.ts
+"use client";
 
-export {};  // Makes this file a module
+import { useState } from "react";
 
-// Your code below
-const useWishlist = () => {
-  // Your hook logic here
-};
+export function useWishlist() {
+  const [wish, setWish] = useState<Record<string, boolean>>({});
 
-export default useWishlist;
+  const toggle = (id: string) => {
+    setWish((prev) => ({ ...prev, [id]: !prev[id] }));
+  };
+
+  const isWishlisted = (id: string) => !!wish[id];
+
+  return { wish, toggle, isWishlisted };
+}

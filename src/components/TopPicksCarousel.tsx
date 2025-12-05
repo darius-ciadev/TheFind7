@@ -120,7 +120,6 @@ export default function TopPicksCarousel<T>({ items }: TopPicksCarouselProps<T>)
             className="
               transition-all 
               hover:-translate-y-2 
-              hover:shadow-[0_12px_32px_rgba(0,0,0,0.08)]
               rounded-2xl
             "
           >
