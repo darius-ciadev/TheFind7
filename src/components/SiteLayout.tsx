@@ -3,6 +3,8 @@ import React, { useState, ReactNode  } from "react";
 import Link from "next/link";
 import Header from "./Header";
 import SearchBar from "@/components/search/SearchBar";
+import CompareSync from "@/components/CompareSync";
+import CompareBar from "@/components/CompareBar";
 
 interface SiteLayoutProps {
     children: ReactNode
@@ -13,6 +15,7 @@ export default function SiteLayout({ children }: SiteLayoutProps) {
 
   return (
     <div className="min-h-screen flex flex-col bg-[var(--find7-color-bg)] text-body">
+      <CompareSync />
       {/* Header */}
       <Header setSearchOpen={setSearchOpen} />
 
@@ -40,6 +43,8 @@ export default function SiteLayout({ children }: SiteLayoutProps) {
           </div>
         </div>
       </footer>
+
+      <CompareBar />
     </div>
   );
 }

@@ -188,6 +188,10 @@ export default function CategoryPage({ category, categoryItems }: Props) {
     });
   }, [filteredItems.length]);
 
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [router.asPath]);
+
   /* Filter handler */
   const handleFiltersChange = useCallback((next: Item[]) => {
     setFilteredItems(next);
@@ -341,7 +345,7 @@ export default function CategoryPage({ category, categoryItems }: Props) {
 
         {/* Breadcrumbs */}
         <nav className="text-sm text-neutral mb-6">
-          <Link href="/">Home</Link> /{" "}
+          <Link href="/">Home</Link> / {" "}
           <span className="text-black">{category.name}</span>
         </nav>
 

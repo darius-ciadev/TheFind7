@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
@@ -16,7 +16,7 @@ import {
 const logoUrl = "/brand/logo_dark_512.png";
 
 /* -----------------------------
-   NavLink (receives active)
+   Underline Nav Link
 ----------------------------- */
 function NavLink({
   href,
@@ -34,66 +34,56 @@ function NavLink({
   return (
     <Link
       href={href}
-      className={`transition px-1 pb-1 border-b-2 ${
-        isActive
-          ? "border-[var(--green)] text-[var(--green)]"
-          : "border-transparent var(--find7-color-primary) hover:border-[var(--green)] hover:text-[var(--green-dark)]"
-      }`}
+      className="
+        relative px-1 pb-1 
+        text-[var(--find7-color-primary)]
+        hover:text-[var(--green-dark)]
+        transition
+      "
     >
       {children}
+
+      {/* Underline */}
+      <span
+        className={`
+          absolute left-0 right-0 -bottom-[2px] h-[2px]
+          rounded-full bg-[var(--green)]
+          transition-all duration-300
+          ${isActive ? "opacity-100 scale-x-100" : "opacity-0 scale-x-0"}
+        `}
+      />
     </Link>
   );
 }
 
 /* -----------------------------
-   MAIN HEADER COMPONENT
+   Main Header
 ----------------------------- */
 export default function Header({
   setSearchOpen
 }: {
   setSearchOpen?: (v: boolean) => void;
 }) {
-  const pathname = usePathname(); // detects current page route
+  const pathname = usePathname();
   const [open, setOpen] = useState(false);
+
+  /* ACTIVE STATE LOGIC */
   const [active, setActive] = useState("home");
 
-  /* -------------------------------------
-     Detect pages (About, Contact, etc.)
-  -------------------------------------- */
   useEffect(() => {
     if (pathname === "/about") setActive("about");
-    else if (pathname !== "/") setActive(""); // other pages → no highlight
-  }, [pathname]);
-
-  /* -------------------------------------
-     Scroll detection ONLY on homepage
-  -------------------------------------- */
-  useEffect(() => {
-    if (pathname !== "/") return; // do NOT run on other pages
-
-    const sections = [
-      { id: "hero", name: "home" },
-      { id: "browse-categories", name: "categories" }
-    ];
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const sec = sections.find((s) => s.id === entry.target.id);
-            if (sec) setActive(sec.name);
-          }
-        });
-      },
-      { threshold: 0.4 }
-    );
-
-    sections.forEach((s) => {
-      const el = document.getElementById(s.id);
-      if (el) observer.observe(el);
-    });
-
-    return () => observer.disconnect();
+    else if (
+      pathname.startsWith("/categories") ||
+      pathname.startsWith("/compare") ||
+      pathname.startsWith("/best-") ||
+      pathname.split("/").length > 2
+    ) {
+      setActive("categories");
+    } else if (pathname === "/") {
+      setActive("home");
+    } else {
+      setActive("");
+    }
   }, [pathname]);
 
   return (
@@ -143,9 +133,10 @@ export default function Header({
               0
             </span>
           </button>
+
         </nav>
 
-        {/* MOBILE MENU TOGGLE */}
+        {/* MOBILE MENU BUTTON */}
         <button
           className="md:hidden text-[var(--green)]"
           onClick={() => setOpen(!open)}
@@ -164,29 +155,12 @@ export default function Header({
           <Link href="/" onClick={() => setOpen(false)} className="block">
             Home
           </Link>
-
           <Link href="/about" onClick={() => setOpen(false)} className="block">
             About
           </Link>
-
           <Link href="/#browse-categories" onClick={() => setOpen(false)} className="block">
             Categories
           </Link>
-
-          <hr className="border-gray-200" />
-
-          <div className="flex items-center gap-6">
-            <button className="flex items-center gap-2">
-              <UserIcon className="w-6 h-6" /> Profile
-            </button>
-
-            <button className="relative flex items-center gap-2">
-              <ShoppingCartIcon className="w-6 h-6" /> Cart
-              <span className="absolute -top-2 -right-3 bg-[var(--green)] text-white text-xs px-1.5 py-0.5 rounded-full">
-                0
-              </span>
-            </button>
-          </div>
         </div>
       </div>
     </header>
