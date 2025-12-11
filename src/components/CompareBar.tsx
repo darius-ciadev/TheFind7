@@ -80,7 +80,7 @@ export default function CompareBar() {
   const selected = allItems.filter((i) => compareSlugs.includes(i.slug));
 
   /* Hooks ALWAYS FIRST */
-  const scrollRef = useRef<HTMLDivElement>(null);
+  const scrollRef = useRef<HTMLUListElement | null>(null);
 
   const [drawerItem, setDrawerItem] = useState<any | null>(null);
 
